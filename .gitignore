@@ -1,0 +1,9 @@
+.gradle/
+build/
+run/
+node_modules/
+dist/
+*.log
+target/
+araclar/fabric_siniflar.txt
+araclar.env

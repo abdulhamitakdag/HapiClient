@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "tr.com.hapicraft.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "AvatarRendererMixin",
+    "ConnectScreenMixin",
+    "GameRendererMixin",
+    "HumanoidModelMixin",
+    "LightTextureMixin",
+    "MinecraftMixin",
+    "MouseHandlerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

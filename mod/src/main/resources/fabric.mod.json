@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "hapiclient",
+  "version": "${version}",
+  "name": "HapiClient",
+  "description": "HapiCraft sunucu ağının resmi istemcisi.",
+  "authors": ["HapiCraft"],
+  "contact": { "homepage": "https://www.hapicraft.com.tr" },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/hapiclient/icon.png",
+  "environment": "client",
+  "entrypoints": { "client": ["tr.com.hapicraft.client.HapiClient"] },
+  "mixins": ["hapiclient.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": "1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
