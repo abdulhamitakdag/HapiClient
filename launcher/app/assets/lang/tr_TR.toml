@@ -1,0 +1,265 @@
+[ejs.landing]
+updateAvailableTooltip = "Güncelleme Var"
+usernamePlaceholder = "Takma Ad"
+usernameEditButton = "Düzenle"
+settingsTooltip = "Ayarlar"
+serverStatus = "SUNUCU"
+serverStatusPlaceholder = "KAPALI"
+newsButton = "HABERLER"
+launchButton = "OYNA"
+launchButtonPlaceholder = "&#8226; Sunucu Yükleniyor"
+launchDetails = "Lütfen bekle.."
+newsNavigationStatus = "{currentPage} / {totalPages}"
+newsErrorLoadSpan = "Haberler denetleniyor.."
+newsErrorFailedSpan = "Haberler yüklenemedi"
+newsErrorRetryButton = "Yeniden Dene"
+newsErrorNoneSpan = "Haber yok"
+
+[ejs.login]
+loginCancelText = "Vazgeç"
+loginSubheader = "HAPICRAFT GİRİŞİ"
+loginNameError = "* Geçersiz takma ad"
+loginNamePlaceholder = "TAKMA AD"
+loginButtonText = "GİRİŞ YAP"
+loginNameRules = "Takma ad 3–16 karakter olmalı; yalnız harf (a–z, A–Z), rakam ve alt çizgi içerebilir."
+loginDisclaimer = "Sunucuda kullandığın takma adı yaz. {appName}, Mojang AB veya Microsoft ile bağlantılı değildir."
+
+[ejs.overlay]
+accountSelectHeader = "Hesap Seç"
+accountSelectConfirm = "Seç"
+accountSelectCancel = "Vazgeç"
+
+[ejs.settings]
+navHeaderText = "Ayarlar"
+navAccount = "Hesap"
+navMinecraft = "Minecraft"
+navMods = "Modlar"
+navJava = "Java ve Donanım"
+navLauncher = "Başlatıcı"
+navAbout = "Hakkında"
+navUpdates = "Güncellemeler"
+navDone = "Tamam"
+tabAccountHeaderText = "Hesap Ayarları"
+tabAccountHeaderDesc = "Yeni hesap ekle ya da var olanları yönet."
+hapiAccount = "HapiCraft Hesapları"
+addAccount = "+ Hesap Ekle"
+minecraftTabHeaderText = "Minecraft Ayarları"
+minecraftTabHeaderDesc = "Oyunun başlatılmasıyla ilgili seçenekler."
+gameResolutionTitle = "Oyun Çözünürlüğü"
+launchFullscreenTitle = "Tam ekran başlat."
+autoConnectTitle = "Oyun açılınca sunucuya kendiliğinden bağlan."
+launchDetachedTitle = "Oyunu başlatıcıdan bağımsız çalıştır."
+launchDetachedDesc = "Oyun bağımsız değilse başlatıcıyı kapatmak oyunu da kapatır."
+tabModsHeaderText = "Mod Ayarları"
+tabModsHeaderDesc = "İsteğe bağlı modları aç ya da kapat. Listede olmayan modlar oyun başlarken kaldırılır."
+requiredMods = "Zorunlu Modlar"
+optionalMods = "İsteğe Bağlı Modlar"
+shaderpacks = "Shader Paketleri"
+shaderpackDesc = "Shader'ları aç ya da kapat. Shader'lar yalnız güçlü bilgisayarlarda akıcı çalışır ve Iris modunun açık olmasını gerektirir. Buraya kendi paketlerini ekleyebilirsin."
+selectShaderpack = "Shader Paketi Seç"
+tabJavaHeaderText = "Java ve Donanım"
+tabJavaHeaderDesc = "Bellek, Java ve donanım taraması (gelişmiş)."
+hardwareTitle = "Donanım Taraması"
+hardwareNotScanned = "Sistem henüz taranmadı."
+hardwareScanButton = "Sistemi Tara"
+hardwareDesc = "Tarama; işlemciye, belleğe ve ekran kartına bakarak oyuna ayrılacak belleği ve performans profilini belirler. Sonuç oyundaki HapiClient ayarlarına aktarılır."
+memoryTitle = "Bellek"
+maxRAM = "En Fazla RAM"
+minRAM = "En Az RAM"
+memoryDesc = "Uygun değer donanım taramasıyla kendiliğinden seçilir. En az ve en fazla değeri aynı tutmak takılmaları azaltabilir. Sistem belleğinin yarısından fazlasını ayırma."
+memoryTotalTitle = "Toplam"
+memoryAvailableTitle = "Boş"
+javaExecutableTitle = "Java Dosyası"
+javaExecSelDialogTitle = "Java Dosyasını Seç"
+javaExecSelButtonText = "Dosya Seç"
+javaExecDesc = "Java dosyası oyun başlamadan önce doğrulanır."
+javaPathDesc = "Yol <strong>{pathSuffix}</strong> ile bitmelidir."
+jvmOptsTitle = "Ek JVM Seçenekleri"
+jvmOptsDesc = "Çalışma anında JVM'e verilecek seçenekler. <em>-Xms</em> ve <em>-Xmx</em> yazılmamalıdır."
+launcherTabHeaderText = "Başlatıcı Ayarları"
+launcherTabHeaderDesc = "Başlatıcının kendisiyle ilgili seçenekler."
+allowPrereleaseTitle = "Ön sürüm güncellemelerine izin ver."
+allowPrereleaseDesc = "Ön sürümler, tam olarak denenmemiş yeni özellikler içerebilir.<br>Zaten bir ön sürüm kullanıyorsan bu seçenek her zaman açıktır."
+dataDirectoryTitle = "Veri Klasörü"
+selectDataDirectory = "Veri Klasörünü Seç"
+chooseFolder = "Klasör Seç"
+dataDirectoryDesc = "Bütün oyun dosyaları ve indirilen Java kurulumları veri klasöründe saklanır.<br>Ekran görüntüleri ve ayarlar bu klasörün içindeki oyun dizininde durur."
+aboutTabHeaderText = "Hakkında"
+aboutTabHeaderDesc = "Kullandığın sürümle ilgili bilgiler."
+aboutTitle = "{appName}"
+stableRelease = "Kararlı Sürüm"
+versionText = "Sürüm "
+site = "Web Sitesi"
+support = "Destek"
+devToolsConsole = "Geliştirici Konsolu"
+attribution = "HapiClient, Daniel Scalzi'nin MIT lisanslı <a href=\"https://github.com/dscalzi/HeliosLauncher\">Helios Launcher</a> projesinden türetilmiştir."
+noReleaseNotes = "Sürüm notu yok"
+launcherUpdatesHeaderText = "Başlatıcı Güncellemeleri"
+launcherUpdatesHeaderDesc = "Başlatıcı güncellemelerini indir, kur ve incele."
+checkForUpdates = "Güncellemeleri Denetle"
+whatsNew = "Yenilikler"
+updateReleaseNotes = "Güncelleme Notları"
+
+[ejs.welcome]
+continueButton = "DEVAM"
+
+
+[js.discord]
+waiting = "İstemci bekleniyor.."
+state = "Sunucu: {shortId}"
+
+[js.login]
+login = "GİRİŞ YAP"
+loggingIn = "GİRİŞ YAPILIYOR"
+success = "BAŞARILI"
+tryAgain = "Yeniden Dene"
+
+[js.login.error]
+invalidValue = "* Geçersiz takma ad"
+requiredValue = "* Zorunlu"
+
+[js.login.error.unknown]
+title = "Girişte Bilinmeyen Hata"
+desc = "Bilinmeyen bir hata oluştu. Ayrıntılar için konsola bak."
+
+[js.auth.error]
+invalidNameTitle = "Geçersiz Takma Ad"
+invalidNameDesc = "Takma ad 3–16 karakter olmalı; yalnız harf (a–z, A–Z), rakam ve alt çizgi içerebilir."
+
+[js.landing.launch]
+pleaseWait = "Lütfen bekle.."
+failureTitle = "Başlatma Hatası"
+failureText = "Ayrıntılar için konsola bak (CTRL + Shift + i)."
+okay = "Tamam"
+
+[js.landing.selectedAccount]
+noAccountSelected = "Hesap Seçilmedi"
+
+[js.landing.selectedServer]
+noSelection = "Sunucu Bulunamadı"
+loading = "Yükleniyor.."
+
+[js.landing.serverStatus]
+server = "SUNUCU"
+offline = "KAPALI"
+players = "OYUNCU"
+
+[js.landing.systemScan]
+checking = "Sistem denetleniyor.."
+noCompatibleJava = "Uygun Java<br>Kurulumu Bulunamadı"
+installJavaMessage = "Minecraft'ı başlatmak için 64 bit Java {major} gerekir. Senin için kuralım mı?"
+installJava = "Java'yı Kur"
+installJavaManually = "Kendim Kurarım"
+javaDownloadPrepare = "Java indirmesi hazırlanıyor.."
+javaDownloadFailureTitle = "Java İndirme Hatası"
+javaDownloadFailureText = "Ayrıntılar için konsola bak (CTRL + Shift + i)."
+javaRequired = "Oyunu Başlatmak İçin<br>Java Gerekli"
+javaRequiredMessage = "Oyunu başlatmak için geçerli bir 64 bit Java {major} kurulumu gerekir.<br><br>Java'yı <a href=\"https://adoptium.net/\">adoptium.net</a> adresinden indirip kurabilir, ardından Ayarlar &gt; Java ve Donanım bölümünden seçebilirsin."
+javaRequiredDismiss = "Anladım"
+javaRequiredCancel = "Geri Dön"
+
+[js.landing.downloadJava]
+findJdkFailure = "OpenJDK dağıtımı bulunamadı."
+javaDownloadCorruptedError = "İndirilen Java dosyasının özeti tutmuyor; dosya bozuk olabilir."
+extractingJava = "Java açılıyor"
+javaInstalled = "Java kuruldu!"
+
+[js.landing.dlAsync]
+loadingServerInfo = "Sunucu bilgileri yükleniyor.."
+fatalError = "Kritik Hata"
+unableToLoadDistributionIndex = "Dağıtım dosyası yüklenemedi. Ayrıntılar için konsola bak (CTRL + Shift + i)."
+pleaseWait = "Lütfen bekle.."
+errorDuringLaunchTitle = "Başlatma Hatası"
+errorDuringLaunchText = "Oyun başlatılırken bir hata oluştu."
+seeConsoleForDetails = "Ayrıntılar için konsola bak (CTRL + Shift + i)."
+validatingFileIntegrity = "Dosyalar doğrulanıyor.."
+errorDuringFileVerificationTitle = "Dosya Doğrulama Hatası"
+downloadingFiles = "Dosyalar indiriliyor.."
+errorDuringFileDownloadTitle = "Dosya İndirme Hatası"
+preparingToLaunch = "Başlatmaya hazırlanılıyor.."
+launchingGame = "Oyun başlatılıyor.."
+launchWrapperNotDownloaded = "Ana dosya (LaunchWrapper) düzgün indirilemediği için oyun başlatılamıyor.<br><br>Sorunu gidermek için antivirüs yazılımını geçici olarak kapatıp oyunu yeniden başlat."
+doneEnjoyServer = "Hazır. İyi oyunlar!"
+checkConsoleForDetails = "Ayrıntılar için konsola bak (CTRL + Shift + i)."
+
+[js.landing.news]
+checking = "Haberler denetleniyor"
+author = "yazan: {author}"
+comments = "{count} yorum"
+
+[js.landing.discord]
+loading = "Oyun yükleniyor.."
+joining = "HapiCraft'a bağlanıyor!"
+joined = "HapiCraft'ta oynuyor!"
+
+[js.overlay]
+dismiss = "Kapat"
+
+[js.settings.fileSelectors]
+executables = "Çalıştırılabilir Dosyalar"
+allFiles = "Tüm Dosyalar"
+
+[js.settings.authAccountSelect]
+selectButton = "Hesabı Seç"
+selectedButton = "Seçili Hesap &#10004;"
+
+[js.settings.authAccountLogout]
+lastAccountWarningTitle = "Uyarı<br>Bu Son Hesabın"
+lastAccountWarningMessage = "Başlatıcıyı kullanmak için en az bir hesap gerekir. Bu hesabı kaldırırsan yeniden takma ad girmen gerekecek.<br><br>Hesabı kaldırmak istediğinden emin misin?"
+confirmButton = "Eminim"
+cancelButton = "Vazgeç"
+
+[js.settings.authAccountPopulate]
+username = "Takma Ad"
+uuid = "UUID"
+selectAccount = "Hesabı Seç"
+selectedAccount = "Seçili Hesap ✓"
+logout = "Hesabı Kaldır"
+
+[js.settings.shaderpacks]
+off = "Kapalı (Varsayılan)"
+
+[js.settings.serverListing]
+mainServer = "Ana Sunucu"
+
+[js.settings.hardware]
+summary = "<strong>İşlemci:</strong> {cpu} ({cekirdek} iş parçacığı)<br><strong>Bellek:</strong> {ram} GB<br><strong>Ekran kartı:</strong> {gpu}<br><strong>Ekran:</strong> {ekran}<br><strong>Performans profili:</strong> {profil}<br><strong>Oyuna ayrılan bellek:</strong> {javaRam} GB"
+unknownGpu = "Bilinmiyor"
+scanning = "Taranıyor.."
+failed = "Tarama başarısız oldu. Ayrıntılar için konsola bak (CTRL + Shift + i)."
+
+[js.settings.hardware.profiles]
+patates = "Patates"
+dusuk = "Düşük"
+dengeli = "Dengeli"
+yuksek = "Yüksek"
+ultra = "Ultra"
+
+[js.settings.java]
+selectedJava = "Seçili: Java {version} ({vendor})"
+invalidSelection = "Geçersiz Seçim"
+requiresJava = "64 bit Java {major} gerekir."
+availableOptions = "Java {major} için kullanılabilir seçenekler (HotSpot VM)"
+
+[js.settings.about]
+preReleaseTitle = "Ön Sürüm"
+stableReleaseTitle = "Kararlı Sürüm"
+
+[js.settings.updates]
+newReleaseTitle = "Yeni Sürüm Var"
+newPreReleaseTitle = "Yeni Ön Sürüm Var"
+downloadingButton = "İndiriliyor.."
+downloadButton = 'Siteden İndir<span style="font-size: 10px;color: gray;text-shadow: none !important;">Güncellemek için başlatıcıyı kapatıp indirdiğin dmg dosyasını çalıştır.</span>'
+latestVersionTitle = "En Güncel Sürümü Kullanıyorsun"
+checkForUpdatesButton = "Güncellemeleri Denetle"
+checkingForUpdatesButton = "Güncellemeler Denetleniyor.."
+
+[js.uibinder.startup]
+fatalErrorTitle = "Kritik Hata: Dağıtım Dosyası Yüklenemedi"
+fatalErrorMessage = "Dağıtım dosyasını indirmek için sunucularımıza bağlanılamadı ve bilgisayarında kayıtlı bir kopya da yok.<br><br>Dağıtım dosyası, güncel sunucu ve mod bilgilerini içeren zorunlu bir dosyadır; başlatıcı onsuz çalışamaz. İnternet bağlantını denetleyip uygulamayı yeniden başlat."
+closeButton = "Kapat"
+
+[js.uicore.autoUpdate]
+checkingForUpdateButton = "Güncellemeler Denetleniyor..."
+installNowButton = "Şimdi Kur"
+checkForUpdatesButton = "Güncellemeleri Denetle"

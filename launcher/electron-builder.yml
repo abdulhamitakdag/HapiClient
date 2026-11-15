@@ -1,0 +1,61 @@
+appId: 'tr.com.hapicraft.client'
+productName: 'HapiClient'
+artifactName: '${productName}-kurulum-${version}.${ext}'
+
+copyright: 'Copyright © 2026 HapiCraft. Helios Launcher tabanlıdır: Copyright © 2018-2026 Daniel Scalzi (MIT).'
+
+asar: true
+compression: 'maximum'
+
+files:
+  - '!{dist,dagitim,araclar,test,.gitignore,.vscode,dev-app-update.yml,.nvmrc,eslint.config.mjs,BENIOKU.md}'
+
+extraResources:
+  - 'libraries'
+
+# Otomatik güncelleme kaynağı (yer tutucu; Faz 2'de nginx altında yayınlanacak).
+publish:
+  provider: 'generic'
+  url: 'https://client.hapicraft.com.tr/guncelleme/'
+
+# Windows Configuration
+win: 
+  icon: 'app/assets/images/logo.ico'
+  target: 
+    - target: 'nsis'
+      arch: 'x64'
+
+# Windows Installer Configuration
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: true
+  allowToChangeInstallationDirectory: true
+  installerLanguages:
+    - 'tr_TR'
+  shortcutName: 'HapiClient'
+
+# macOS Configuration
+mac:
+  icon: 'app/assets/images/logo.icns'
+  target:
+    - target: 'dmg'
+      arch:
+        - 'x64'
+        - 'arm64'
+  artifactName: '${productName}-kurulum-${version}-${arch}.${ext}'
+  category: 'public.app-category.games'
+
+# Linux Configuration
+linux: 
+  target: 'AppImage'
+  maintainer: 'HapiCraft'
+  vendor: 'HapiCraft'
+  synopsis: 'HapiCraft Minecraft başlatıcısı'
+  description: 'HapiCraft için özel başlatıcı. Modlar, ayarlar ve güncellemeler kendiliğinden yönetilir.'
+  category: 'Game'
+
+
+directories:
+  buildResources: 'build'
+  output: 'dist'

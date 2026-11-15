@@ -1,0 +1,18 @@
+# HapiClient'e özgü metinler ve bağlantılar. Genel çeviriler tr_TR.toml içindedir.
+
+[ejs.app]
+title = "HapiClient"
+
+[ejs.landing]
+# Yer tutucu: gerçek Discord davet bağlantısı belli olunca değiştirilecek.
+mediaSiteURL = "https://www.hapicraft.com.tr"
+mediaDiscordURL = "https://www.hapicraft.com.tr"
+
+[ejs.settings]
+siteLink = "https://www.hapicraft.com.tr"
+supportLink = "https://www.hapicraft.com.tr"
+
+[ejs.welcome]
+welcomeHeader = "HAPICRAFT'A HOŞ GELDİN"
+welcomeDescription = "HapiClient, HapiCraft için hazırlanmış özel istemcidir. Mod kurmana, sürüm seçmene ya da sunucu adresi yazmana gerek yok: takma adını yaz, OYNA'ya bas ve doğrudan sunucuya gir. Performans modları, HUD, danslar ve kozmetikler hazır gelir."
+welcomeDescCTA = "Oyuna birkaç tık uzaktasın."

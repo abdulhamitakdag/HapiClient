@@ -1,0 +1,7 @@
+exports.SHELL_OPCODE = {
+    TRASH_ITEM: 'TRASH_ITEM'
+}
+
+exports.HAPI_OPCODE = {
+    DONANIM_TARA: 'HAPI_DONANIM_TARA'
+}
