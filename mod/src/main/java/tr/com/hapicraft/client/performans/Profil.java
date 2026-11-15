@@ -14,7 +14,7 @@ public enum Profil {
     DUSUK("Düşük", "Zayıf bilgisayarlar için", 6, 5, GraphicsPreset.FAST, CloudStatus.OFF,
             ParticleStatus.DECREASED, 0, 1, false, 0.75, false, 120),
     DENGELI("Dengeli", "Görüntü ve akıcılık dengesi", 10, 8, GraphicsPreset.FAST, CloudStatus.FAST,
-            ParticleStatus.DECREASED, 2, 4, true, 1.0, true, 144),
+            ParticleStatus.DECREASED, 2, 4, true, 1.0, true, 150),
     YUKSEK("Yüksek", "Güçlü ekran kartları için", 14, 10, GraphicsPreset.FANCY, CloudStatus.FANCY,
             ParticleStatus.ALL, 3, 4, true, 1.0, true, 240),
     ULTRA("Ultra", "Her şey açık", 20, 12, GraphicsPreset.FANCY, CloudStatus.FANCY,
