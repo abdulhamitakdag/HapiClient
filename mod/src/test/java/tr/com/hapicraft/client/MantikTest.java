@@ -10,6 +10,7 @@ import tr.com.hapicraft.client.ozellik.Nisangah;
 import tr.com.hapicraft.client.ozellik.Ozellikler;
 import tr.com.hapicraft.client.performans.Donanim;
 import tr.com.hapicraft.client.performans.Profil;
+import tr.com.hapicraft.client.giris.OtoGiris;
 import tr.com.hapicraft.client.sohbet.SessizSohbet;
 
 import java.lang.reflect.Field;
@@ -134,5 +135,28 @@ class MantikTest {
                 }
             }
         }
+    }
+
+    @Test
+    void girisPenceresiSifreyleYanitlanir() {
+        assertEquals(java.util.Map.of("sifre", "gizli123"), OtoGiris.yanit(java.util.List.of("sifre"), "gizli123"));
+        assertEquals(java.util.Map.of("sifre", "gizli123", "sifre2", "gizli123"),
+                OtoGiris.yanit(java.util.List.of("sifre", "sifre2"), "gizli123"));
+    }
+
+    @Test
+    void baskaPencereVeSifresizOturumYanitlanmaz() {
+        assertNull(OtoGiris.yanit(java.util.List.of("sifre", "eposta"), "gizli123"));
+        assertNull(OtoGiris.yanit(java.util.List.of("miktar"), "gizli123"));
+        assertNull(OtoGiris.yanit(java.util.List.of(), "gizli123"));
+        assertNull(OtoGiris.yanit(java.util.List.of("sifre"), null));
+    }
+
+    @Test
+    void sohbetUyarisiKomutlaYanitlanir() {
+        assertEquals("giriş gizli123", OtoGiris.komut("§a§lHapi§f§lCraft§r §7» §7Giriş yapmak için lütfen §e/giriş <şifre> §7yazın.", "gizli123"));
+        assertEquals("kayıt gizli123 gizli123", OtoGiris.komut("HapiCraft » Sunucuya kayıt olmak için lütfen /kayıt <şifre> <tekrar> yazın.", "gizli123"));
+        assertNull(OtoGiris.komut("[VIP] biri: /giriş <şifre> yaz", null));
+        assertNull(OtoGiris.komut("HapiCraft » Giriş başarılı, iyi oyunlar!", "gizli123"));
     }
 }

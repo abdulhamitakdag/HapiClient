@@ -319,17 +319,19 @@ exports.getAuthAccount = function(uuid){
  * @param {string} uuid Hesabın çevrimdışı UUID'si.
  * @param {string} accessToken Oyuna verilecek erişim anahtarı.
  * @param {string} name Takma ad.
+ * @param {string|null} sifre Anahtar kasasıyla şifrelenmiş sunucu şifresi (yoksa null).
  *
  * @returns {Object} Eklenen hesap nesnesi.
  */
-exports.addOfflineAuthAccount = function(uuid, accessToken, name){
+exports.addOfflineAuthAccount = function(uuid, accessToken, name, sifre = null){
     config.selectedAccount = uuid
     config.authenticationDatabase[uuid] = {
         type: 'cevrimdisi',
         accessToken,
         username: name.trim(),
         uuid: uuid.trim(),
-        displayName: name.trim()
+        displayName: name.trim(),
+        sifre
     }
     return config.authenticationDatabase[uuid]
 }

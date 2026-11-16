@@ -5,6 +5,7 @@
   "client": [
     "AvatarRendererMixin",
     "CameraMixin",
+    "ClientCommonPacketListenerImplMixin",
     "ConnectScreenMixin",
     "FishingHookRendererMixin",
     "GameRendererMixin",

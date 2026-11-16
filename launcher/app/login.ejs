@@ -18,7 +18,15 @@
                 <span class="loginErrorSpan" id="loginNameError"><%- lang('login.loginNameError') %></span>
                 <input id="loginUsername" class="loginField" type="text" maxlength="16" spellcheck="false" autocomplete="off" placeholder="<%- lang('login.loginNamePlaceholder') %>"/>
             </div>
-            <!-- Faz 3: şifre alanı buraya eklenecek (AuthManager.addOfflineAccount ikinci parametresi). -->
+            <div class="loginFieldContainer">
+                <svg id="lockSVG" class="loginSVG" viewBox="40 32 60.36 70.43">
+                    <g>
+                        <path d="M86.16,54a16.38,16.38,0,1,0-32,0H44V102.7H96V54Zm-25.9-3.39a9.89,9.89,0,1,1,19.77,0A9.78,9.78,0,0,1,79.39,54H60.89A9.78,9.78,0,0,1,60.26,50.59ZM70,96.2a6.5,6.5,0,0,1-6.5-6.5c0-3.57,2.92-6.5,6.5-9.75,3.57,3.25,6.5,6.18,6.5,9.75A6.5,6.5,0,0,1,70,96.2Z"/>
+                    </g>
+                </svg>
+                <span class="loginErrorSpan" id="loginPasswordError"><%- lang('login.loginPasswordError') %></span>
+                <input id="loginPassword" class="loginField" type="password" maxlength="30" spellcheck="false" autocomplete="off" placeholder="<%- lang('login.loginPasswordPlaceholder') %>"/>
+            </div>
             <button id="loginButton" disabled>
                 <div id="loginButtonContent">
                     <%- lang('login.loginButtonText') %>
@@ -35,6 +43,7 @@
             </button>
             <div id="loginDisclaimer">
                 <p class="loginDisclaimerText"><%- lang('login.loginNameRules') %></p>
+                <p class="loginDisclaimerText"><%- lang('login.loginPasswordRules') %></p>
                 <p class="loginDisclaimerText"><%- lang('login.loginDisclaimer', { appName: lang('app.title') }) %></p>
             </div>
         </form>

@@ -2,10 +2,9 @@
  * AuthManager
  *
  * Giriş işlemlerinin tek kapısı. HapiCraft çevrimdışı (offline-mode) bir ağ olduğu için
- * hesap yalnız takma addan oluşur; UUID, sunucunun hesaplayacağı çevrimdışı UUID ile aynıdır.
- *
- * Faz 3 (şifre + API doğrulaması) için genişleme noktası `kimlikDogrula` fonksiyonudur:
- * arayüz ve ConfigManager yalnız bu modülün döndürdüğü hesap nesnesini kullanır.
+ * hesap takma ad ve sunucu şifresinden oluşur; UUID, sunucunun hesaplayacağı çevrimdışı UUID ile
+ * aynıdır. Şifre burada doğrulanmaz: işletim sisteminin anahtar kasasıyla şifrelenip saklanır ve
+ * oyuna girişte mod tarafından sunucunun giriş penceresine yazılır.
  *
  * @module authmanager
  */
@@ -14,6 +13,11 @@ const ConfigManager = require('./configmanager')
 const { LoggerUtil } = require('helios-core')
 const Lang = require('./langloader')
 const { gecerliTakmaAd, cevrimdisiUuid } = require('./hapi/cevrimdisi')
+const { gecerliSifre, sakla, coz } = require('./hapi/sifrekasasi')
+
+function kasa(){
+    return require('@electron/remote').safeStorage
+}
 
 const log = LoggerUtil.getLogger('AuthManager')
 
@@ -21,41 +25,42 @@ const log = LoggerUtil.getLogger('AuthManager')
 const SAHTE_ACCESS_TOKEN = 'hapiclient-cevrimdisi'
 
 /**
- * Kimlik doğrulama. Şimdilik yalnız takma adın biçimini denetler.
- * Faz 3'te burada `sifre` ile HapiCraft API'sine istek atılacak ve dönen oturum
- * anahtarı `accessToken` olarak kullanılacak.
+ * Takma ad ve şifreyle hesap ekler ve seçili hesap yapar.
  *
- * @param {string} takmaAd Takma ad.
- * @param {string|null} _sifre Faz 3'e kadar kullanılmaz.
- * @returns {Promise.<{uuid: string, accessToken: string, displayName: string}>}
+ * @param {string} takmaAd Takma ad (3–16 karakter, [A-Za-z0-9_]).
+ * @param {string} sifre Sunucu şifresi (5–30 karakter).
+ * @returns {Promise.<Object>} Eklenen hesap nesnesi.
  */
-async function kimlikDogrula(takmaAd, _sifre = null){
+exports.addOfflineAccount = async function(takmaAd, sifre){
     if(!gecerliTakmaAd(takmaAd)){
         return Promise.reject({
             title: Lang.queryJS('auth.error.invalidNameTitle'),
             desc: Lang.queryJS('auth.error.invalidNameDesc')
         })
     }
-    return {
-        uuid: cevrimdisiUuid(takmaAd),
-        accessToken: SAHTE_ACCESS_TOKEN,
-        displayName: takmaAd
+    if(!gecerliSifre(sifre)){
+        return Promise.reject({
+            title: Lang.queryJS('auth.error.invalidPasswordTitle'),
+            desc: Lang.queryJS('auth.error.invalidPasswordDesc')
+        })
     }
+    const uuid = cevrimdisiUuid(takmaAd)
+    const sakli = sakla(kasa(), sifre)
+    if(sakli == null){
+        log.warn('Anahtar kasası kullanılamıyor; şifre saklanmadı, oyunda sorulacak.')
+    }
+    const ret = ConfigManager.addOfflineAuthAccount(uuid, SAHTE_ACCESS_TOKEN, takmaAd, sakli)
+    ConfigManager.save()
+    log.info(`Hesap eklendi: ${takmaAd} (${uuid})`)
+    return ret
 }
 
 /**
- * Takma adla hesap ekler ve seçili hesap yapar.
- *
- * @param {string} takmaAd Takma ad (3–16 karakter, [A-Za-z0-9_]).
- * @param {string|null} sifre Faz 3'e kadar kullanılmaz.
- * @returns {Promise.<Object>} Eklenen hesap nesnesi.
+ * @param {Object} hesap ConfigManager'daki hesap nesnesi.
+ * @returns {string|null} Hesabın açık şifresi; saklanmamışsa null.
  */
-exports.addOfflineAccount = async function(takmaAd, sifre = null){
-    const oturum = await kimlikDogrula(takmaAd, sifre)
-    const ret = ConfigManager.addOfflineAuthAccount(oturum.uuid, oturum.accessToken, oturum.displayName)
-    ConfigManager.save()
-    log.info(`Hesap eklendi: ${oturum.displayName} (${oturum.uuid})`)
-    return ret
+exports.hesapSifresi = function(hesap){
+    return hesap ? coz(kasa(), hesap.sifre) : null
 }
 
 /**
@@ -71,7 +76,6 @@ exports.removeAccount = async function(uuid){
 
 /**
  * Seçili hesabı doğrular. Çevrimdışı hesapta süresi dolan bir oturum yoktur.
- * Faz 3'te oturum anahtarı burada yenilenecek.
  *
  * @returns {Promise.<boolean>} Hesap kullanılabilir ise true.
  */

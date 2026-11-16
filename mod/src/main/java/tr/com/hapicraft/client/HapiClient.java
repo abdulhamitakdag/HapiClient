@@ -14,6 +14,7 @@ import tr.com.hapicraft.client.ag.Ag;
 import tr.com.hapicraft.client.ekran.EmoteEkrani;
 import tr.com.hapicraft.client.ekran.HapiMenu;
 import tr.com.hapicraft.client.emote.EmoteYoneticisi;
+import tr.com.hapicraft.client.giris.OtoGiris;
 import tr.com.hapicraft.client.hud.Hud;
 import tr.com.hapicraft.client.kozmetik.Kozmetikler;
 import tr.com.hapicraft.client.ozellik.Ozellikler;
@@ -22,7 +23,7 @@ import tr.com.hapicraft.client.sohbet.SessizSohbet;
 
 public final class HapiClient implements ClientModInitializer {
     public static final String KIMLIK = "hapiclient";
-    public static final String SURUM = "0.2.0";
+    public static final String SURUM = "0.3.0";
     public static final String SUNUCU_ADRESI = "hapicraft.net";
     public static final Logger LOG = LoggerFactory.getLogger("HapiClient");
 
@@ -50,6 +51,7 @@ public final class HapiClient implements ClientModInitializer {
         Hud.kur();
         Kozmetikler.kur();
         SessizSohbet.kur();
+        OtoGiris.kur();
 
         ClientTickEvents.END_CLIENT_TICK.register(HapiClient::tik);
     }

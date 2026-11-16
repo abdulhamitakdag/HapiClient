@@ -20,7 +20,10 @@ loginCancelText = "Vazgeç"
 loginSubheader = "HAPICRAFT GİRİŞİ"
 loginNameError = "* Geçersiz takma ad"
 loginNamePlaceholder = "TAKMA AD"
+loginPasswordError = "* Geçersiz şifre"
+loginPasswordPlaceholder = "ŞİFRE"
 loginButtonText = "GİRİŞ YAP"
+loginPasswordRules = "Sunucudaki şifreni yaz; oyuna girince şifre sorulmaz. Hesabın yoksa buraya yazdığın şifreyle kaydın açılır. Şifre 5–30 karakter olmalı."
 loginNameRules = "Takma ad 3–16 karakter olmalı; yalnız harf (a–z, A–Z), rakam ve alt çizgi içerebilir."
 loginDisclaimer = "Sunucuda kullandığın takma adı yaz. {appName}, Mojang AB veya Microsoft ile bağlantılı değildir."
 
@@ -116,6 +119,7 @@ tryAgain = "Yeniden Dene"
 
 [js.login.error]
 invalidValue = "* Geçersiz takma ad"
+invalidPassword = "* 5–30 karakter, boşluksuz"
 requiredValue = "* Zorunlu"
 
 [js.login.error.unknown]
@@ -125,6 +129,8 @@ desc = "Bilinmeyen bir hata oluştu. Ayrıntılar için konsola bak."
 [js.auth.error]
 invalidNameTitle = "Geçersiz Takma Ad"
 invalidNameDesc = "Takma ad 3–16 karakter olmalı; yalnız harf (a–z, A–Z), rakam ve alt çizgi içerebilir."
+invalidPasswordTitle = "Geçersiz Şifre"
+invalidPasswordDesc = "Şifre 5–30 karakter olmalı ve boşluk içermemeli."
 
 [js.landing.launch]
 pleaseWait = "Lütfen bekle.."

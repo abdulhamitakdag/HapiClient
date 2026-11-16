@@ -1,16 +1,18 @@
 /**
  * Script for login.ejs
  *
- * Takma adla çevrimdışı giriş. Faz 3'te şifre alanı eklenince yalnız bu dosya ve
- * AuthManager.addOfflineAccount değişir.
+ * Takma ad ve şifreyle giriş. Şifre launcher'da saklanır, oyuna girişte modun kendisi yazar.
  */
 const { gecerliTakmaAd } = require('./assets/js/hapi/cevrimdisi')
+const { gecerliSifre } = require('./assets/js/hapi/sifrekasasi')
 
 // Login Elements
 const loginCancelContainer  = document.getElementById('loginCancelContainer')
 const loginCancelButton     = document.getElementById('loginCancelButton')
 const loginNameError        = document.getElementById('loginNameError')
 const loginUsername         = document.getElementById('loginUsername')
+const loginPasswordError    = document.getElementById('loginPasswordError')
+const loginPassword         = document.getElementById('loginPassword')
 const loginButton           = document.getElementById('loginButton')
 const loginForm             = document.getElementById('loginForm')
 
@@ -48,14 +50,32 @@ function shakeError(element){
 function validateName(value){
     if(!value){
         showError(loginNameError, Lang.queryJS('login.error.requiredValue'))
-        loginDisabled(true)
     } else if(!gecerliTakmaAd(value)){
         showError(loginNameError, Lang.queryJS('login.error.invalidValue'))
-        loginDisabled(true)
     } else {
         loginNameError.style.opacity = 0
-        loginDisabled(false)
     }
+    loginDisabled(!formGecerli())
+}
+
+/**
+ * Şifreyi doğrular ve giriş düğmesini buna göre açar/kapatır.
+ *
+ * @param {string} value Şifre.
+ */
+function validatePassword(value){
+    if(!value){
+        showError(loginPasswordError, Lang.queryJS('login.error.requiredValue'))
+    } else if(!gecerliSifre(value)){
+        showError(loginPasswordError, Lang.queryJS('login.error.invalidPassword'))
+    } else {
+        loginPasswordError.style.opacity = 0
+    }
+    loginDisabled(!formGecerli())
+}
+
+function formGecerli(){
+    return gecerliTakmaAd(loginUsername.value) && gecerliSifre(loginPassword.value)
 }
 
 // Emphasize errors with shake when focus is lost.
@@ -67,6 +87,15 @@ loginUsername.addEventListener('focusout', (e) => {
 // Validate input.
 loginUsername.addEventListener('input', (e) => {
     validateName(e.target.value)
+})
+
+loginPassword.addEventListener('focusout', (e) => {
+    validatePassword(e.target.value)
+    shakeError(loginPasswordError)
+})
+
+loginPassword.addEventListener('input', (e) => {
+    validatePassword(e.target.value)
 })
 
 /**
@@ -104,6 +133,7 @@ function formDisabled(v){
     loginDisabled(v)
     loginCancelButton.disabled = v
     loginUsername.disabled = v
+    loginPassword.disabled = v
 }
 
 let loginViewOnSuccess = VIEWS.landing
@@ -120,6 +150,7 @@ function loginCancelEnabled(val){
 loginCancelButton.onclick = (e) => {
     switchView(getCurrentView(), loginViewOnCancel, 500, 500, () => {
         loginUsername.value = ''
+        loginPassword.value = ''
         loginCancelEnabled(false)
     })
 }
@@ -135,7 +166,7 @@ loginButton.addEventListener('click', () => {
     // Show loading stuff.
     loginLoading(true)
 
-    AuthManager.addOfflineAccount(loginUsername.value).then((value) => {
+    AuthManager.addOfflineAccount(loginUsername.value, loginPassword.value).then((value) => {
         updateSelectedAccount(value)
         loginButton.innerHTML = loginButton.innerHTML.replace(Lang.queryJS('login.loggingIn'), Lang.queryJS('login.success'))
         $('.circle-loader').toggleClass('load-complete')
@@ -149,6 +180,7 @@ loginButton.addEventListener('click', () => {
                 loginViewOnSuccess = VIEWS.landing // Reset this for good measure.
                 loginCancelEnabled(false) // Reset this for good measure.
                 loginUsername.value = ''
+                loginPassword.value = ''
                 $('.circle-loader').toggleClass('load-complete')
                 $('.checkmark').toggle()
                 loginLoading(false)

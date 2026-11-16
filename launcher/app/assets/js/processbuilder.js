@@ -10,6 +10,8 @@ const path                  = require('path')
 
 const ConfigManager            = require('./configmanager')
 const { yabanciModlariKarantinayaAl } = require('./hapi/modbutunlugu')
+const { oyunuTurkceYap } = require('./hapi/dil')
+const AuthManager = require('./authmanager')
 
 const logger = LoggerUtil.getLogger('ProcessBuilder')
 
@@ -51,6 +53,15 @@ class ProcessBuilder {
         if(karantina.length > 0){
             logger.warn('Dağıtımda olmayan dosyalar mods klasöründen karantinaya alındı:', karantina)
         }
+        if(oyunuTurkceYap(this.gameDir)){
+            logger.info('Oyun dili Türkçe olarak ayarlandı.')
+        }
+        // Şifre komut satırına yazılmaz (süreç listesinde görünür); ortam değişkeniyle moda geçer.
+        const ortam = { ...process.env }
+        const sifre = AuthManager.hesapSifresi(this.authUser)
+        if(sifre != null){
+            ortam.HAPICLIENT_SIFRE = sifre
+        }
         const tempNativePath = path.join(os.tmpdir(), ConfigManager.getTempNativeFolder(), crypto.pseudoRandomBytes(16).toString('hex'))
         process.throwDeprecation = true
         this.setupLiteLoader()
@@ -84,6 +95,7 @@ class ProcessBuilder {
 
         const child = child_process.spawn(ConfigManager.getJavaExecutable(this.server.rawServer.id), args, {
             cwd: this.gameDir,
+            env: ortam,
             detached: ConfigManager.getLaunchDetached()
         })
 

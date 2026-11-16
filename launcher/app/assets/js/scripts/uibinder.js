@@ -70,6 +70,13 @@ async function showMainUI(data){
         document.body.style.backgroundImage = `url('assets/images/backgrounds/${document.body.getAttribute('bkid')}.jpg')`
         $('#main').show()
 
+        // 0.1.0'da açılan hesaplarda şifre alanı yoktur; şifreyle yeniden giriş istenir.
+        for(const hesap of Object.values(ConfigManager.getAuthAccounts())){
+            if(hesap.sifre === undefined){
+                ConfigManager.removeAuthAccount(hesap.uuid)
+                ConfigManager.save()
+            }
+        }
         const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
 
         if(ConfigManager.isFirstLaunch()){

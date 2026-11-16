@@ -1,6 +1,6 @@
 {
   "name": "hapiclient",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "productName": "HapiClient",
   "description": "HapiCraft için özel Minecraft başlatıcısı",
   "author": "HapiCraft (https://www.hapicraft.com.tr)",

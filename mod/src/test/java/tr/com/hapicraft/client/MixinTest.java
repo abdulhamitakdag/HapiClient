@@ -20,6 +20,7 @@ class MixinTest {
             "net.minecraft.client.renderer.entity.FishingHookRenderer",
             "net.minecraft.client.renderer.ScreenEffectRenderer",
             "net.minecraft.client.renderer.WeatherEffectRenderer",
+            "net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl",
     };
 
     @Test
