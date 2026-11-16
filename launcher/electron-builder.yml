@@ -13,7 +13,7 @@ files:
 extraResources:
   - 'libraries'
 
-# Otomatik güncelleme kaynağı (yer tutucu; Faz 2'de nginx altında yayınlanacak).
+# Otomatik güncelleme kaynağı.
 publish:
   provider: 'generic'
   url: 'https://client.hapicraft.com.tr/guncelleme/'
@@ -27,10 +27,10 @@ win:
 
 # Windows Installer Configuration
 nsis:
-  oneClick: false
+  oneClick: true
   perMachine: false
-  allowElevation: true
-  allowToChangeInstallationDirectory: true
+  runAfterFinish: true
+  createDesktopShortcut: true
   installerLanguages:
     - 'tr_TR'
   shortcutName: 'HapiClient'
