@@ -14,6 +14,12 @@ class MixinTest {
             "net.minecraft.client.model.HumanoidModel",
             "net.minecraft.client.renderer.entity.player.AvatarRenderer",
             "net.minecraft.client.gui.screens.ConnectScreen",
+            "net.minecraft.client.Camera",
+            "net.minecraft.client.gui.Gui",
+            "net.minecraft.client.renderer.LevelRenderer",
+            "net.minecraft.client.renderer.entity.FishingHookRenderer",
+            "net.minecraft.client.renderer.ScreenEffectRenderer",
+            "net.minecraft.client.renderer.WeatherEffectRenderer",
     };
 
     @Test

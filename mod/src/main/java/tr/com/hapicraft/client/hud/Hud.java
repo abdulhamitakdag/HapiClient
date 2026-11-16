@@ -3,6 +3,7 @@ package tr.com.hapicraft.client.hud;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.core.Direction;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -11,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import tr.com.hapicraft.client.HapiClient;
 import tr.com.hapicraft.client.ag.Ag;
 import tr.com.hapicraft.client.ekran.HudDuzenleyici;
+import tr.com.hapicraft.client.ozellik.Gorunum;
 import tr.com.hapicraft.client.sohbet.SessizSohbet;
 
 import java.time.LocalTime;
@@ -25,6 +27,7 @@ public final class Hud {
     private static final Deque<Long> SOL = new ArrayDeque<>(), SAG = new ArrayDeque<>();
     private static final DateTimeFormatter SAAT = DateTimeFormatter.ofPattern("HH:mm");
     private static long girisAni = 0;
+    private static double oncekiX, oncekiZ, hiz;
 
     private Hud() {}
 
@@ -44,6 +47,20 @@ public final class Hud {
     public static void tik(Minecraft mc) {
         if (mc.level == null) girisAni = 0;
         else if (girisAni == 0) girisAni = System.currentTimeMillis();
+        if (mc.player == null || mc.isPaused()) return;
+        double dx = mc.player.getX() - oncekiX, dz = mc.player.getZ() - oncekiZ;
+        oncekiX = mc.player.getX(); oncekiZ = mc.player.getZ();
+        double anlik = Math.sqrt(dx * dx + dz * dz) * 20;
+        // Işınlanma tek tikte yüzlerce blok gösterir; onu hız sayma.
+        hiz = anlik > 200 ? 0 : hiz * 0.6 + anlik * 0.4;
+    }
+
+    /** Pusuladaki bir işaretin bakış yönüne göre açısı, (-180, 180]. Artı değer sağda demektir. */
+    public static float pusulaFarki(float isaret, float yaw) {
+        float fark = (isaret - yaw) % 360f;
+        if (fark > 180f) fark -= 360f;
+        if (fark <= -180f) fark += 360f;
+        return fark;
     }
 
     public static void kur() {
@@ -87,13 +104,14 @@ public final class Hud {
         });
         MODULLER.add(new HudModul("tuslar", "Tuş Vuruşları", false, 0.005f, 0.6f) {
             public void ciz(GuiGraphics g, Minecraft mc, int x, int y, boolean d) {
-                genislik = 62; yukseklik = 62;
+                genislik = 62; yukseklik = 78;
                 tus(g, mc, x + 21, y, 20, 20, "W", mc.options.keyUp.isDown());
                 tus(g, mc, x, y + 21, 20, 20, "A", mc.options.keyLeft.isDown());
                 tus(g, mc, x + 21, y + 21, 20, 20, "S", mc.options.keyDown.isDown());
                 tus(g, mc, x + 42, y + 21, 20, 20, "D", mc.options.keyRight.isDown());
                 tus(g, mc, x, y + 42, 30, 20, cps(SOL) + " CPS", mc.options.keyAttack.isDown());
                 tus(g, mc, x + 32, y + 42, 30, 20, cps(SAG) + " CPS", mc.options.keyUse.isDown());
+                tus(g, mc, x, y + 63, 62, 15, "Boşluk", mc.options.keyJump.isDown());
             }
         });
         MODULLER.add(new HudModul("zirh", "Zırh Durumu", true, 0.005f, 0.4f) {
@@ -134,6 +152,67 @@ public final class Hud {
                 }
                 if (satir == 0 && d) { g.drawString(mc.font, "İksir etkileri", x, y, 0xFFAAAAAA, true); satir = 1; }
                 yukseklik = Math.max(10, satir * 10);
+            }
+        });
+        MODULLER.add(new HudModul("cps", "CPS", false, 0.005f, 0.22f) {
+            public void ciz(GuiGraphics g, Minecraft mc, int x, int y, boolean d) {
+                kutuluYazi(g, mc, x, y, cps(SOL) + " | " + cps(SAG) + " CPS");
+            }
+        });
+        MODULLER.add(new HudModul("hiz", "Hız", false, 0.005f, 0.255f) {
+            public void ciz(GuiGraphics g, Minecraft mc, int x, int y, boolean d) {
+                kutuluYazi(g, mc, x, y, String.format("%.1f blok/sn", hiz));
+            }
+        });
+        MODULLER.add(new HudModul("yon", "Pusula", false, 0.4f, 0.01f) {
+            private static final String[] AD = {"G", "GB", "B", "KB", "K", "KD", "D", "GD"};
+            public void ciz(GuiGraphics g, Minecraft mc, int x, int y, boolean d) {
+                genislik = 130; yukseklik = 14;
+                g.fill(x, y, x + genislik, y + yukseklik, 0x90000000);
+                float yaw = mc.player == null ? 180f : mc.player.getYRot();
+                for (int i = 0; i < AD.length; i++) {
+                    float fark = pusulaFarki(i * 45f, yaw);
+                    int yg = mc.font.width(AD[i]);
+                    int px = x + genislik / 2 + Math.round(fark / 70f * (genislik / 2f)) - yg / 2;
+                    if (px < x + 2 || px + yg > x + genislik - 2) continue;
+                    g.drawString(mc.font, AD[i], px, y + 3, i % 2 == 0 ? 0xFFFFFFFF : 0xFFAAAAAA, false);
+                }
+                g.fill(x + genislik / 2, y + yukseklik - 2, x + genislik / 2 + 1, y + yukseklik, 0xFF2BD35A);
+            }
+        });
+        MODULLER.add(new HudModul("esya", "Eşya Sayacı", false, 0.6f, 0.9f) {
+            public void ciz(GuiGraphics g, Minecraft mc, int x, int y, boolean d) {
+                ItemStack eldeki = mc.player == null ? ItemStack.EMPTY : mc.player.getMainHandItem();
+                if (eldeki.isEmpty()) {
+                    genislik = d ? 40 : 0; yukseklik = d ? 17 : 0;
+                    if (d) g.drawString(mc.font, "Eşya", x + 2, y + 4, 0xFFAAAAAA, true);
+                    return;
+                }
+                int toplam = 0;
+                for (int i = 0; i < mc.player.getInventory().getContainerSize(); i++) {
+                    ItemStack es = mc.player.getInventory().getItem(i);
+                    if (es.is(eldeki.getItem())) toplam += es.getCount();
+                }
+                String yazi = "x" + toplam;
+                genislik = 21 + mc.font.width(yazi); yukseklik = 17;
+                g.renderItem(eldeki, x, y);
+                g.drawString(mc.font, yazi, x + 19, y + 4, 0xFFFFFFFF, true);
+            }
+        });
+        MODULLER.add(new HudModul("karakter", "Karakter", false, 0.88f, 0.55f) {
+            private static final int[] OLCEK = {20, 28, 38};
+            public void ciz(GuiGraphics g, Minecraft mc, int x, int y, boolean d) {
+                int olcek = OLCEK[Gorunum.deger("karakter.boyut")];
+                genislik = olcek * 5 / 3; yukseklik = olcek * 7 / 3;
+                if (mc.player == null) {
+                    g.drawString(mc.font, "Karakter", x + 2, y + 2, 0xFFAAAAAA, true);
+                    return;
+                }
+                // Oyuncu modeli ekranda tek bir çizim alanı kullanır; envanter gibi bir ekran
+                // açıkken oradaki modelle çakışmasın.
+                if (mc.screen != null && !d) return;
+                InventoryScreen.renderEntityInInventoryFollowsMouse(g, x, y, x + genislik, y + yukseklik, olcek,
+                        0.0625f, x + genislik / 2f + 28f, y + yukseklik * 0.35f, mc.player);
             }
         });
         MODULLER.add(new HudModul("sessizgosterge", "Sessiz Sohbet Göstergesi", true, 0.005f, 0.9f) {

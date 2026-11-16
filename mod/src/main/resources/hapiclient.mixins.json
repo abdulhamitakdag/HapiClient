@@ -4,12 +4,18 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "AvatarRendererMixin",
+    "CameraMixin",
     "ConnectScreenMixin",
+    "FishingHookRendererMixin",
     "GameRendererMixin",
+    "GuiMixin",
     "HumanoidModelMixin",
+    "LevelRendererMixin",
     "LightTextureMixin",
     "MinecraftMixin",
-    "MouseHandlerMixin"
+    "MouseHandlerMixin",
+    "ScreenEffectRendererMixin",
+    "WeatherEffectRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

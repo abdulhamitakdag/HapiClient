@@ -21,6 +21,8 @@ public final class Ayarlar {
     public Map<String, Boolean> modul = new HashMap<>();
     public Map<String, float[]> konum = new HashMap<>();
     public Map<String, String> kozmetik = new HashMap<>();
+    /** Görünüm seçenekleri (renk, şekil, kalınlık): anahtar → seçili değerin sırası. */
+    public Map<String, Integer> secenek = new HashMap<>();
     public List<String> favoriEmote = new ArrayList<>();
     public boolean sessiz = false;
     public boolean tamParlaklik = false;
@@ -47,6 +49,7 @@ public final class Ayarlar {
         if (modul == null) modul = new HashMap<>();
         if (konum == null) konum = new HashMap<>();
         if (kozmetik == null) kozmetik = new HashMap<>();
+        if (secenek == null) secenek = new HashMap<>();
         if (favoriEmote == null) favoriEmote = new ArrayList<>();
         if (profil == null) profil = "";
         return this;

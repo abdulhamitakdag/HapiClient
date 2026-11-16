@@ -34,7 +34,7 @@
               "type": "VersionManifest",
               "artifact": {
                 "size": 2865,
-                "MD5": "f9ccccf1eb16dcf8a325435c3c767220",
+                "MD5": "2f410ddddd1ef859c8b0d6b6fb4bfbbd",
                 "url": "https://client.hapicraft.com.tr/dagitim/versions/1.21.11-fabric-0.20.1/1.21.11-fabric-0.20.1.json"
               }
             },
@@ -259,13 +259,13 @@
           }
         },
         {
-          "id": "tr.com.hapicraft:hapiclient:0.1.0@jar",
+          "id": "tr.com.hapicraft:hapiclient:0.2.0@jar",
           "name": "HapiClient",
           "type": "FabricMod",
           "artifact": {
-            "size": 106708,
-            "MD5": "31253524e33429868b51d5cc38674438",
-            "url": "https://client.hapicraft.com.tr/dagitim/mods/hapiclient-0.1.0%2Bmc1.21.11.jar"
+            "size": 128767,
+            "MD5": "f3533eca78ef0b3e0b792c2bc31ab5e5",
+            "url": "https://client.hapicraft.com.tr/dagitim/mods/hapiclient-0.2.0%2Bmc1.21.11.jar"
           }
         }
       ]

@@ -6,9 +6,10 @@ import tr.com.hapicraft.client.Ayarlar;
 import tr.com.hapicraft.client.HapiClient;
 import tr.com.hapicraft.client.ag.Ag;
 
-/** HUD dışı küçük özellikler: yakınlaştırma, tam parlaklık. Sunucu her birini uzaktan kapatabilir. */
+/** HUD dışı küçük özelliklerin ortak kapısı ve yakınlaştırma, tam parlaklık. Sunucu her birini uzaktan kapatabilir. */
 public final class Ozellikler {
-    private static float zoomOrani = 1f;
+    private static final float ZOOM_VARSAYILAN = 4f;
+    private static float zoomOrani = 1f, zoomSeviye = ZOOM_VARSAYILAN;
     private static long sonKare = System.nanoTime();
 
     private Ozellikler() {}
@@ -26,12 +27,28 @@ public final class Ozellikler {
         long simdi = System.nanoTime();
         float dt = Math.min(0.1f, (simdi - sonKare) / 1_000_000_000f);
         sonKare = simdi;
-        Minecraft mc = Minecraft.getInstance();
-        boolean basili = mc.screen == null && HapiClient.tusZoom.isDown() && acik("zoom", true);
-        float hedef = basili ? 0.25f : 1f;
+        boolean basili = zoomBasili();
+        if (!basili) zoomSeviye = ZOOM_VARSAYILAN;
+        float hedef = basili ? 1f / zoomSeviye : 1f;
         zoomOrani += (hedef - zoomOrani) * Math.min(1f, dt * 14f);
         if (Math.abs(zoomOrani - hedef) < 0.002f) zoomOrani = hedef;
         return zoomOrani;
+    }
+
+    private static boolean zoomBasili() {
+        return Minecraft.getInstance().screen == null && HapiClient.tusZoom.isDown() && acik("zoom", true);
+    }
+
+    /** Tekerleğin bir adımı: yukarı yaklaştırır, aşağı uzaklaştırır; 1,5x ile 16x arasında kalır. */
+    public static float zoomSonraki(float seviye, double tekerlek) {
+        return Math.max(1.5f, Math.min(16f, seviye * (tekerlek > 0 ? 1.25f : 0.8f)));
+    }
+
+    /** Fare tekerleği. true dönerse tekerlek yakınlaştırmaya gitmiştir, eşya çubuğu kaymaz. */
+    public static boolean zoomKaydir(double tekerlek) {
+        if (tekerlek == 0 || !zoomBasili()) return false;
+        zoomSeviye = zoomSonraki(zoomSeviye, tekerlek);
+        return true;
     }
 
     public static boolean tamParlaklik() {

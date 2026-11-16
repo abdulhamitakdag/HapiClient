@@ -17,18 +17,19 @@ import tr.com.hapicraft.client.emote.EmoteYoneticisi;
 import tr.com.hapicraft.client.hud.Hud;
 import tr.com.hapicraft.client.kozmetik.Kozmetikler;
 import tr.com.hapicraft.client.ozellik.Ozellikler;
+import tr.com.hapicraft.client.ozellik.SerbestBakis;
 import tr.com.hapicraft.client.sohbet.SessizSohbet;
 
 public final class HapiClient implements ClientModInitializer {
     public static final String KIMLIK = "hapiclient";
-    public static final String SURUM = "0.1.0";
+    public static final String SURUM = "0.2.0";
     public static final String SUNUCU_ADRESI = "hapicraft.net";
     public static final Logger LOG = LoggerFactory.getLogger("HapiClient");
 
     public static final int YESIL = 0xFF2BD35A;
     public static final int KOYU = 0xC0101512;
 
-    public static KeyMapping tusMenu, tusEmote, tusZoom, tusSessiz, tusParlaklik;
+    public static KeyMapping tusMenu, tusEmote, tusZoom, tusSessiz, tusParlaklik, tusSerbest;
 
     public static Identifier kimlik(String yol) {
         return Identifier.fromNamespaceAndPath(KIMLIK, yol);
@@ -43,6 +44,7 @@ public final class HapiClient implements ClientModInitializer {
         tusZoom = tus("zoom", GLFW.GLFW_KEY_C, kategori);
         tusSessiz = tus("sessiz", GLFW.GLFW_KEY_N, kategori);
         tusParlaklik = tus("parlaklik", GLFW.GLFW_KEY_G, kategori);
+        tusSerbest = tus("serbest", GLFW.GLFW_KEY_LEFT_ALT, kategori);
 
         Ag.kur();
         Hud.kur();
@@ -62,6 +64,7 @@ public final class HapiClient implements ClientModInitializer {
         while (tusEmote.consumeClick()) if (mc.player != null) mc.setScreen(new EmoteEkrani());
         while (tusSessiz.consumeClick()) SessizSohbet.degistir();
         while (tusParlaklik.consumeClick()) Ozellikler.parlaklikDegistir();
+        SerbestBakis.tik(mc);
         EmoteYoneticisi.tik(mc);
         Kozmetikler.tik(mc);
         Hud.tik(mc);

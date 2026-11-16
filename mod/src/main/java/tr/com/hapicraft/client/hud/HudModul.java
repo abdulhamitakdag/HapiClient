@@ -8,7 +8,7 @@ import tr.com.hapicraft.client.ozellik.Ozellikler;
 /** Ekranda sürüklenebilen tek bir gösterge. Konum ekranın oranı olarak saklanır. */
 public abstract class HudModul {
     public final String kimlik, ad;
-    private final boolean varsayilanAcik;
+    public final boolean varsayilanAcik;
     private final float vx, vy;
     public int genislik = 40, yukseklik = 12;
 
