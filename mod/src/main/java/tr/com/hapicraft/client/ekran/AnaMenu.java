@@ -1,7 +1,6 @@
 package tr.com.hapicraft.client.ekran;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsScreen;
@@ -31,16 +30,16 @@ public final class AnaMenu extends Screen {
             try { Donanim.tara().onerilen().uygula(minecraft); } catch (Throwable t) { HapiClient.LOG.warn("İlk profil uygulanamadı", t); }
             Ayarlar.kaydet();
         }
-        int g = 220, x = (width - g) / 2, y = height / 2 - 10;
-        addRenderableWidget(Button.builder(Component.literal("§a§lOYNA"), b -> baglan(this)).bounds(x, y, g, 28).build());
-        addRenderableWidget(Button.builder(Component.literal("Kozmetikler"), b -> minecraft.setScreen(new KozmetikEkrani(this)))
-                .bounds(x, y + 34, g / 2 - 2, 20).build());
-        addRenderableWidget(Button.builder(Component.literal("HapiClient Ayarları"), b -> minecraft.setScreen(new HapiMenu(this)))
-                .bounds(x + g / 2 + 2, y + 34, g / 2 - 2, 20).build());
-        addRenderableWidget(Button.builder(Component.literal("Oyun Seçenekleri"), b -> minecraft.setScreen(new OptionsScreen(this, minecraft.options)))
-                .bounds(x, y + 58, g / 2 - 2, 20).build());
-        addRenderableWidget(Button.builder(Component.literal("Çıkış"), b -> minecraft.stop())
-                .bounds(x + g / 2 + 2, y + 58, g / 2 - 2, 20).build());
+        int g = 220, x = (width - g) / 2, y = height / 2 - 10, yari = g / 2 - 2;
+        dugme("§lOYNA", x, y, g, 28, () -> baglan(this)).vurgulu = true;
+        dugme("Kozmetikler", x, y + 34, yari, 20, () -> minecraft.setScreen(new KozmetikEkrani(this)));
+        dugme("HapiClient Ayarları", x + g / 2 + 2, y + 34, yari, 20, () -> minecraft.setScreen(new HapiMenu(this)));
+        dugme("Oyun Seçenekleri", x, y + 58, yari, 20, () -> minecraft.setScreen(new OptionsScreen(this, minecraft.options)));
+        dugme("Çıkış", x + g / 2 + 2, y + 58, yari, 20, minecraft::stop);
+    }
+
+    private HapiDugme dugme(String yazi, int x, int y, int w, int h, Runnable is) {
+        return addRenderableWidget(new HapiDugme(x, y, w, h, Component.literal(yazi), b -> is.run()));
     }
 
     @Override

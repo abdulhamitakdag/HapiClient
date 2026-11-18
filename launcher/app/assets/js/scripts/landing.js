@@ -129,6 +129,12 @@ document.getElementById('settingsMediaButton').onclick = async e => {
     switchView(getCurrentView(), VIEWS.settings)
 }
 
+// Kozmetik sayfası.
+document.getElementById('kozmetikButton').onclick = () => {
+    prepareKozmetik()
+    switchView(getCurrentView(), VIEWS.kozmetik, 500, 500, () => {}, () => kozmetikSahnesi.baslat())
+}
+
 // Bind avatar overlay button.
 document.getElementById('avatarOverlay').onclick = async e => {
     await prepareSettings()

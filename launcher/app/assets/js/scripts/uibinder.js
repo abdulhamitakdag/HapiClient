@@ -18,6 +18,7 @@ const VIEWS = {
     landing: '#landingContainer',
     login: '#loginContainer',
     settings: '#settingsContainer',
+    kozmetik: '#kozmetikContainer',
     welcome: '#welcomeContainer'
 }
 

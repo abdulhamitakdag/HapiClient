@@ -1,7 +1,6 @@
 package tr.com.hapicraft.client.ekran;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import tr.com.hapicraft.client.Ayarlar;
@@ -15,15 +14,15 @@ import tr.com.hapicraft.client.ozellik.Ozellikler;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Sağ Shift ile açılan ana ayar ekranı: Özellikler, Göstergeler ve Görünüm sekmeleri. */
+/** Sağ Shift ile açılan ana ayar ekranı: solda bölümler ve kısayollar, sağda anahtarlı ayar satırları. */
 public final class HapiMenu extends HapiEkran {
-    /** kimlik boş değilse sunucu bu satırı kapatabilir. */
-    private record Satir(String kimlik, String ad, boolean varsayilan, boolean secenek) {}
+    /** kimlik boş değilse sunucu bu satırı kapatabilir. ipucu: tuş ya da kısa not (boş olabilir). */
+    private record Satir(String kimlik, String ad, String ipucu, boolean varsayilan, boolean secenek) {}
 
     private static final String[] SEKMELER = {"Özellikler", "Göstergeler", "Görünüm"};
-    private static final int GORUNUM = 2;
+    private static final int GORUNUM = 2, SOL_G = 104, SATIR_Y = 22;
     private static int sekme = 0;
-    private int sayfa = 0;
+    private int sayfa = 0, sayfaSayisi = 1, sayfaX, sayfaY;
 
     public HapiMenu(Screen onceki) {
         super("Ayarlar", onceki);
@@ -33,22 +32,22 @@ public final class HapiMenu extends HapiEkran {
         List<Satir> s = new ArrayList<>();
         switch (sekme) {
             case 0 -> {
-                s.add(new Satir("zoom", "Yakınlaştırma (C + tekerlek)", true, false));
-                s.add(new Satir("serbestbakis", "360° Bakış (Sol Alt)", true, false));
-                s.add(new Satir("tamparlaklik", "Tam Parlaklık (G)", false, false));
-                s.add(new Satir("sessizsohbet", "Sessiz Sohbet (N)", false, false));
-                s.add(new Satir("nisangah", "Özel Nişangah", false, false));
-                s.add(new Satir("blokcercevesi", "Blok Çerçevesi", false, false));
-                s.add(new Satir("misina", "Olta Misinası", false, false));
-                s.add(new Satir("alcakates", "Alçak Ateş", false, false));
-                s.add(new Satir("yagmurgizle", "Yağmuru Gizle", false, false));
-                s.add(new Satir("skorgizle", "Skor Tablosunu Gizle", false, false));
+                s.add(new Satir("zoom", "Yakınlaştırma", "C + tekerlek", true, false));
+                s.add(new Satir("serbestbakis", "360° Bakış", "Sol Alt", true, false));
+                s.add(new Satir("tamparlaklik", "Tam Parlaklık", "G", false, false));
+                s.add(new Satir("sessizsohbet", "Sessiz Sohbet", "N", false, false));
+                s.add(new Satir("nisangah", "Özel Nişangah", "", false, false));
+                s.add(new Satir("blokcercevesi", "Blok Çerçevesi", "", false, false));
+                s.add(new Satir("misina", "Olta Misinası", "", false, false));
+                s.add(new Satir("alcakates", "Alçak Ateş", "", false, false));
+                s.add(new Satir("yagmurgizle", "Yağmuru Gizle", "", false, false));
+                s.add(new Satir("skorgizle", "Skor Tablosunu Gizle", "", false, false));
             }
             case 1 -> {
-                for (HudModul m : Hud.MODULLER) s.add(new Satir(m.kimlik, m.ad, m.varsayilanAcik, false));
+                for (HudModul m : Hud.MODULLER) s.add(new Satir(m.kimlik, m.ad, "", m.varsayilanAcik, false));
             }
             default -> {
-                for (Gorunum.Secenek g : Gorunum.SECENEKLER) s.add(new Satir(g.anahtar(), g.ad(), false, true));
+                for (Gorunum.Secenek g : Gorunum.SECENEKLER) s.add(new Satir(g.anahtar(), g.ad(), "", false, true));
             }
         }
         return s;
@@ -56,38 +55,71 @@ public final class HapiMenu extends HapiEkran {
 
     @Override
     protected void init() {
-        // Sol üstteki sayfa düğmelerine (55 px) yer kalsın diye dar ekranda sekmeler küçülür.
-        int sekmeG = Math.min(100, (width - 116) / 3), sx = width / 2 - (sekmeG * 3 + 6) / 2;
-        for (int i = 0; i < SEKMELER.length; i++) {
+        int x = 8, y = 36;
+        for (int i = 0; i < SEKMELER.length; i++, y += SATIR_Y) {
             int no = i;
-            dugme(SEKMELER[i], sx + i * (sekmeG + 3), 32, sekmeG, () -> { sekme = no; sayfa = 0; rebuildWidgets(); })
-                    .active = i != sekme;
+            dugme(SEKMELER[i], x, y, SOL_G, () -> { sekme = no; sayfa = 0; rebuildWidgets(); }).secili = i == sekme;
         }
+        // Kısayollar alta yaslanır; alçak ekranda sekmelerin hemen altından başlar.
+        y = Math.max(y + 6, height - 8 - 4 * SATIR_Y + 2);
+        dugme("HUD'u Düzenle", x, y, SOL_G, () -> minecraft.setScreen(new HudDuzenleyici(this)));
+        dugme("Kozmetikler", x, y + SATIR_Y, SOL_G, () -> minecraft.setScreen(new KozmetikEkrani(this)));
+        dugme("Danslar", x, y + SATIR_Y * 2, SOL_G, () -> { if (minecraft.player != null) minecraft.setScreen(new EmoteEkrani()); })
+                .active = minecraft.player != null;
+        dugme("Performans", x, y + SATIR_Y * 3, SOL_G, () -> minecraft.setScreen(new PerformansEkrani(this)));
 
         List<Satir> satirlar = satirlar();
-        int sutunG = Math.min(190, (width - 30) / 2), x0 = width / 2 - sutunG - 3, y0 = 58, alt = height - 28;
-        int sayfaBoyu = Math.max(1, (alt - 6 - y0) / 22) * 2;
-        int sayfaSayisi = (satirlar.size() + sayfaBoyu - 1) / sayfaBoyu;
+        int x0 = x + SOL_G + 10, alanG = width - x0 - 8, y0 = 36, alt = height - 30;
+        int sutun = alanG >= 340 ? 2 : 1, sutunG = (alanG - (sutun - 1) * 6) / sutun;
+        int sayfaBoyu = Math.max(1, (alt - y0) / SATIR_Y) * sutun;
+        sayfaSayisi = Math.max(1, (satirlar.size() + sayfaBoyu - 1) / sayfaBoyu);
         sayfa = Math.min(sayfa, sayfaSayisi - 1);
         for (int i = sayfa * sayfaBoyu, yer = 0; i < satirlar.size() && yer < sayfaBoyu; i++, yer++) {
             Satir s = satirlar.get(i);
-            Button b = Button.builder(etiket(s), d -> { degistir(s); d.setMessage(etiket(s)); })
-                    .bounds(x0 + (yer % 2) * (sutunG + 6), y0 + (yer / 2) * 22, sutunG, 20).build();
+            AyarSatiri b = new AyarSatiri(x0 + (yer % sutun) * (sutunG + 6), y0 + (yer / sutun) * SATIR_Y, sutunG, s);
             b.active = s.secenek || Ozellikler.izinli(s.kimlik);
             addRenderableWidget(b);
         }
         if (sayfaSayisi > 1) {
-            dugme("<", 6, 32, 20, () -> { sayfa--; rebuildWidgets(); }).active = sayfa > 0;
-            dugme(">", 29, 32, 20, () -> { sayfa++; rebuildWidgets(); }).active = sayfa < sayfaSayisi - 1;
+            sayfaX = x0 + alanG - 46;
+            sayfaY = height - 28;
+            dugme("‹", sayfaX - 46, sayfaY, 20, () -> { sayfa--; rebuildWidgets(); }).active = sayfa > 0;
+            dugme("›", x0 + alanG - 20, sayfaY, 20, () -> { sayfa++; rebuildWidgets(); }).active = sayfa < sayfaSayisi - 1;
+        }
+    }
+
+    /** Bir ayar satırı: solda ad ve tuş ipucu, sağda aç/kapa anahtarı ya da seçili değer. */
+    private final class AyarSatiri extends HapiDugme {
+        private final Satir s;
+
+        AyarSatiri(int x, int y, int w, Satir s) {
+            super(x, y, w, 20, Component.literal(s.ad), b -> degistir(s));
+            this.s = s;
         }
 
-        int g = Math.min(110, (width - 30) / 4);
-        int bx = width / 2 - (g * 4 + 9) / 2;
-        dugme("HUD'u Düzenle", bx, alt, g, () -> minecraft.setScreen(new HudDuzenleyici(this)));
-        dugme("Kozmetikler", bx + g + 3, alt, g, () -> minecraft.setScreen(new KozmetikEkrani(this)));
-        dugme("Danslar", bx + (g + 3) * 2, alt, g, () -> { if (minecraft.player != null) minecraft.setScreen(new EmoteEkrani()); })
-                .active = minecraft.player != null;
-        dugme("Performans", bx + (g + 3) * 3, alt, g, () -> minecraft.setScreen(new PerformansEkrani(this)));
+        @Override
+        protected void renderContents(GuiGraphics g, int fx, int fy, float kismi) {
+            int x = getX(), y = getY(), w = getWidth(), sag = x + w - 7;
+            boolean ustunde = active && isHoveredOrFocused();
+            g.fill(x, y, x + w, y + 20, ustunde ? 0xE0203028 : 0xD0141A17);
+            g.renderOutline(x, y, w, 20, ustunde ? 0xFF2BD35A : 0xFF303A34);
+            g.drawString(font, s.ad + (s.ipucu.isEmpty() ? "" : " §8" + s.ipucu), x + 7, y + 6, active ? 0xFFFFFFFF : 0xFF6B746F, false);
+            if (s.secenek) {
+                String deger = "‹ " + Gorunum.degerAdi(s.kimlik) + " ›";
+                g.drawString(font, deger, sag - font.width(deger), y + 6, 0xFF2BD35A, false);
+            } else if (!active) {
+                String kapali = "sunucuda kapalı";
+                g.drawString(font, kapali, sag - font.width(kapali), y + 6, 0xFF6B746F, false);
+            } else {
+                // Anahtar: 20x10 ray, içinde 8x8 topuz.
+                boolean acik = durum(s);
+                int ax = sag - 20, ay = y + 5;
+                g.fill(ax, ay, ax + 20, ay + 10, acik ? 0xFF1E7A3A : 0xFF2A302D);
+                g.renderOutline(ax, ay, 20, 10, acik ? 0xFF2BD35A : 0xFF4A534E);
+                int tx = acik ? ax + 11 : ax + 1;
+                g.fill(tx, ay + 1, tx + 8, ay + 9, acik ? 0xFF2BD35A : 0xFF8A948E);
+            }
+        }
     }
 
     private boolean durum(Satir s) {
@@ -112,12 +144,6 @@ public final class HapiMenu extends HapiEkran {
         Ayarlar.kaydet();
     }
 
-    private Component etiket(Satir s) {
-        if (s.secenek) return Component.literal(s.ad + ": §a" + Gorunum.degerAdi(s.kimlik));
-        if (!Ozellikler.izinli(s.kimlik)) return Component.literal("§7" + s.ad + ": §8sunucuda kapalı");
-        return Component.literal(s.ad + ": " + (durum(s) ? "§aAçık" : "§cKapalı"));
-    }
-
     @Override
     public void render(GuiGraphics g, int fx, int fy, float kismi) {
         super.render(g, fx, fy, kismi);
@@ -128,5 +154,6 @@ public final class HapiMenu extends HapiEkran {
         }
         // Ekran açıkken oyundaki nişangah görünmez; seçilen şekil başlık şeridinde önizlenir.
         if (sekme == GORUNUM) Nisangah.cizSekil(g, width / 2, 13);
+        if (sayfaSayisi > 1) g.drawCenteredString(font, (sayfa + 1) + " / " + sayfaSayisi, sayfaX, sayfaY + 6, 0xFFB8C4BC);
     }
 }

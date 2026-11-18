@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tr.com.hapicraft.client.HapiClient;
 import tr.com.hapicraft.client.kozmetik.Kozmetik;
 import tr.com.hapicraft.client.kozmetik.Kozmetikler;
+import tr.com.hapicraft.client.kozmetik.Onizleme;
 
 /** Seçili pelerini oyuncunun skin kaydına yerleştirir; çizimi vanilla pelerin katmanı yapar. */
 @Mixin(AvatarRenderer.class)
@@ -21,9 +21,7 @@ public abstract class AvatarRendererMixin {
     private void hapi$pelerin(Avatar varlik, AvatarRenderState durum, float kismi, CallbackInfo ci) {
         Kozmetik k = Kozmetikler.takili(varlik.getUUID(), "pelerin");
         if (k == null || durum.skin == null) return;
-        ClientAsset.Texture doku = new ClientAsset.ResourceTexture(
-                HapiClient.kimlik("pelerin/" + k.bicim()),
-                HapiClient.kimlik("textures/pelerin/" + k.bicim() + ".png"));
+        ClientAsset.Texture doku = Onizleme.pelerinDokusu(k).doku();
         PlayerSkin s = durum.skin;
         durum.skin = new PlayerSkin(s.body(), doku, s.elytra(), s.model(), s.secure());
         durum.showCape = true;

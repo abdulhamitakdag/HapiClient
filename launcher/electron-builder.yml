@@ -9,6 +9,9 @@ compression: 'maximum'
 
 files:
   - '!{dist,dagitim,araclar,test,.gitignore,.vscode,dev-app-update.yml,.nvmrc,eslint.config.mjs,BENIOKU.md}'
+  # three.js'in yalnız CommonJS derlemesi kullanılır.
+  - '!node_modules/three/{examples,src}'
+  - '!node_modules/three/build/three.{module,webgpu}*'
 
 extraResources:
   - 'libraries'

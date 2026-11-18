@@ -7,3 +7,9 @@ dist/
 target/
 araclar/fabric_siniflar.txt
 araclar.env
+# Kozmetik üreticisinin ham resimleri (büyük) ve ara çıktısı
+kozmetik/ham/kanat/
+kozmetik/ham/pelerin/
+kozmetik/ham/log/
+kozmetik/cikti/
+__pycache__/

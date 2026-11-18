@@ -11,13 +11,17 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import tr.com.hapicraft.client.HapiClient;
 
 /** Şapka, hale ve kanatları oyuncu modelinin üstüne çizer. Pelerin vanilla katmanıyla çizilir. */
 public final class KozmetikKatmani extends RenderLayer<AvatarRenderState, PlayerModel> {
     private static final Identifier BEYAZ = HapiClient.kimlik("textures/beyaz.png");
+    private static final Identifier DISLI = HapiClient.kimlik("textures/kozmetik/disli.png");
     private static final int PARLAK = LightTexture.FULL_BRIGHT;
+    /** Kanadın kökten uca bölündüğü eklem sayısı. */
+    public static final int EKLEM = 8;
 
     public KozmetikKatmani(RenderLayerParent<AvatarRenderState, PlayerModel> ust) {
         super(ust);
@@ -31,175 +35,127 @@ public final class KozmetikKatmani extends RenderLayer<AvatarRenderState, Player
         Kozmetik kanat = Kozmetikler.takili(d.id, "kanat");
         if (sapka == null && hale == null && kanat == null) return;
         PlayerModel model = getParentModel();
-        RenderType tur = RenderTypes.entityCutoutNoCull(BEYAZ);
         float zaman = d.ageInTicks;
 
         if (sapka != null || hale != null) {
+            RenderType duz = RenderTypes.entityCutoutNoCull(BEYAZ);
             ps.pushPose();
             model.root().translateAndRotate(ps);
             model.head.translateAndRotate(ps);
-            if (sapka != null) toplayici.submitCustomGeometry(ps, tur, (p, vc) -> sapkaCiz(p, vc, sapka, isik));
-            if (hale != null) {
-                ps.translate(0, -11.5f / 16f + (float) Math.sin(zaman * 0.08f) * 0.02f, 0);
-                ps.mulPose(Axis.YP.rotationDegrees(zaman * 3f));
-                toplayici.submitCustomGeometry(ps, tur, (p, vc) -> haleCiz(p, vc, hale, zaman));
-            }
+            if (sapka != null) VokselModel.al(sapka.model()).ciz(ps, toplayici, duz, isik, zaman);
+            if (hale != null) VokselModel.al(hale.model()).ciz(ps, toplayici, duz, isik, zaman);
             ps.popPose();
         }
-        if (kanat != null && !d.isFallFlying) {
-            float cirpma = (float) Math.sin(zaman * (d.isCrouching ? 0.08f : 0.16f)) * 0.3f + 0.45f;
-            for (int yon = -1; yon <= 1; yon += 2) {
-                ps.pushPose();
-                model.root().translateAndRotate(ps);
-                model.body.translateAndRotate(ps);
-                ps.translate(yon * 1.2f / 16f, 2.5f / 16f, 2.1f / 16f);
-                ps.mulPose(Axis.YP.rotation(-yon * cirpma));
-                final int y = yon;
-                toplayici.submitCustomGeometry(ps, tur, (p, vc) -> kanatCiz(p, vc, kanat, y, isik));
-                ps.popPose();
-            }
+        if (kanat != null && !d.isFallFlying) kanatCiz(ps, toplayici, model, kanat, d, isik);
+    }
+
+    private static void kanatCiz(PoseStack ps, SubmitNodeCollector toplayici, PlayerModel model, Kozmetik k,
+                                 AvatarRenderState d, int isik) {
+        float[] aci = kanatAcilari(k.hareket(), d.ageInTicks, d.isCrouching, Math.min(1f, d.walkAnimationSpeed));
+        Identifier doku = HapiClient.kimlik("textures/kozmetik/kanat/" + k.doku() + ".png");
+        RenderType tur = k.saydam() ? RenderTypes.entityTranslucent(doku) : RenderTypes.entityCutoutNoCull(doku);
+        RenderType parlak = k.isik()
+                ? RenderTypes.entityCutoutNoCull(HapiClient.kimlik("textures/kozmetik/kanat/" + k.doku() + "_isik.png")) : null;
+        RenderType disli = k.disliler().length > 0 ? RenderTypes.entityCutoutNoCull(DISLI) : null;
+        float zaman = d.ageInTicks;
+        for (int yon = -1; yon <= 1; yon += 2) {
+            final int y = yon;
+            ps.pushPose();
+            model.root().translateAndRotate(ps);
+            model.body.translateAndRotate(ps);
+            ps.translate(yon * 1.4f / 16f, 3.2f / 16f, 2.05f / 16f);
+            ps.mulPose(Axis.ZP.rotation(-yon * 0.08f));
+            toplayici.submitCustomGeometry(ps, tur, (p, vc) -> kanatYaz(p, vc, k, y, aci, isik));
+            if (parlak != null) toplayici.submitCustomGeometry(ps, parlak, (p, vc) -> kanatYaz(p, vc, k, y, aci, PARLAK));
+            if (disli != null) toplayici.submitCustomGeometry(ps, disli, (p, vc) -> disliYaz(p, vc, k, y, aci, isik, zaman));
+            ps.popPose();
         }
     }
 
-    private static void sapkaCiz(PoseStack.Pose p, VertexConsumer vc, Kozmetik k, int isik) {
-        int a = k.renk1(), b = k.renk2();
-        switch (k.bicim()) {
-            case "silindir" -> {
-                Sekil.kutu(p, vc, -5.5f, -8.8f, -5.5f, 5.5f, -8f, 5.5f, a, isik);
-                Sekil.kutu(p, vc, -3.6f, -15f, -3.6f, 3.6f, -8.8f, 3.6f, a, isik);
-                Sekil.kutu(p, vc, -3.8f, -10.4f, -3.8f, 3.8f, -8.8f, 3.8f, b, isik);
-            }
-            case "tac" -> {
-                Sekil.kutu(p, vc, -4.3f, -10f, -4.3f, 4.3f, -8f, 4.3f, a, isik);
-                for (int i = 0; i < 4; i++) {
-                    float x = (i % 2 == 0 ? -4.3f : 2.7f), z = (i < 2 ? -4.3f : 2.7f);
-                    Sekil.kutu(p, vc, x, -12.5f, z, x + 1.6f, -10f, z + 1.6f, a, isik);
-                }
-                Sekil.kutu(p, vc, -0.8f, -12f, -4.3f, 0.8f, -10f, -3.5f, a, isik);
-                Sekil.kutu(p, vc, -0.7f, -9.7f, -4.6f, 0.7f, -8.4f, -4.2f, b, PARLAK);
-            }
-            case "fes" -> {
-                Sekil.kutu(p, vc, -3.4f, -13.5f, -3.4f, 3.4f, -8f, 3.4f, a, isik);
-                Sekil.kutu(p, vc, -3.0f, -14f, -3.0f, 3.0f, -13.5f, 3.0f, a, isik);
-                Sekil.kutu(p, vc, -0.4f, -14.6f, -0.4f, 0.4f, -14f, 0.4f, b, isik);
-                Sekil.kutu(p, vc, 0.2f, -14.5f, -0.3f, 4.2f, -14.1f, 0.3f, b, isik);
-                Sekil.kutu(p, vc, 3.6f, -14.3f, -0.4f, 4.4f, -10.5f, 0.4f, b, isik);
-            }
-            case "parti" -> {
-                for (int i = 0; i < 6; i++) {
-                    float r = 3.2f - i * 0.5f;
-                    Sekil.kutu(p, vc, -r, -9.3f - i * 1.3f, -r, r, -8f - i * 1.3f, r, i % 2 == 0 ? a : b, isik);
-                }
-                Sekil.kutu(p, vc, -0.8f, -17f, -0.8f, 0.8f, -15.6f, 0.8f, 0xFFFFFFFF, isik);
-            }
-            case "hasir" -> {
-                Sekil.kutu(p, vc, -7f, -8.7f, -7f, 7f, -8f, 7f, a, isik);
-                Sekil.kutu(p, vc, -4f, -11.5f, -4f, 4f, -8.7f, 4f, a, isik);
-                Sekil.kutu(p, vc, -4.2f, -9.8f, -4.2f, 4.2f, -8.7f, 4.2f, b, isik);
-            }
-            case "boynuz" -> {
-                for (int s = -1; s <= 1; s += 2) {
-                    Sekil.kutu(p, vc, s * 3f - 0.9f, -10f, -0.9f, s * 3f + 0.9f, -8f, 0.9f, a, isik);
-                    Sekil.kutu(p, vc, s * 3.8f - 0.7f, -12f, -0.7f, s * 3.8f + 0.7f, -10f, 0.7f, a, isik);
-                    Sekil.kutu(p, vc, s * 4.4f - 0.5f, -13.6f, -0.5f, s * 4.4f + 0.5f, -12f, 0.5f, b, isik);
-                }
-            }
-            case "kedi" -> {
-                for (int s = -1; s <= 1; s += 2) {
-                    Sekil.kutu(p, vc, s * 2.8f - 1.5f, -10f, -0.5f, s * 2.8f + 1.5f, -8f, 0.5f, a, isik);
-                    Sekil.kutu(p, vc, s * 2.8f - 0.9f, -11.3f, -0.5f, s * 2.8f + 0.9f, -10f, 0.5f, a, isik);
-                    Sekil.kutu(p, vc, s * 2.8f - 0.7f, -9.8f, -0.7f, s * 2.8f + 0.7f, -8.3f, -0.5f, b, isik);
-                }
-            }
-            case "tavsan" -> {
-                for (int s = -1; s <= 1; s += 2) {
-                    Sekil.kutu(p, vc, s * 2.2f - 1f, -15f, -0.5f, s * 2.2f + 1f, -8f, 0.5f, a, isik);
-                    Sekil.kutu(p, vc, s * 2.2f - 0.5f, -14.2f, -0.7f, s * 2.2f + 0.5f, -9f, -0.5f, b, isik);
-                }
-            }
-            case "asci" -> {
-                Sekil.kutu(p, vc, -3.6f, -11.5f, -3.6f, 3.6f, -8f, 3.6f, b, isik);
-                Sekil.kutu(p, vc, -4.6f, -15.5f, -4.6f, 4.6f, -11.5f, 4.6f, a, isik);
-            }
-            case "buyucu" -> {
-                Sekil.kutu(p, vc, -6.5f, -8.7f, -6.5f, 6.5f, -8f, 6.5f, a, isik);
-                for (int i = 0; i < 6; i++) {
-                    float r = 3.6f - i * 0.58f;
-                    Sekil.kutu(p, vc, -r + i * 0.2f, -10.5f - i * 1.6f, -r, r + i * 0.2f, -8.7f - i * 1.6f, r, a, isik);
-                }
-                Sekil.kutu(p, vc, -3.8f, -10f, -3.8f, 3.8f, -8.7f, 3.8f, b, isik);
-            }
-            case "kep" -> {
-                Sekil.kutu(p, vc, -4.3f, -10.5f, -4.3f, 4.3f, -8f, 4.3f, a, isik);
-                Sekil.kutu(p, vc, -3.6f, -11.3f, -3.6f, 3.6f, -10.5f, 3.6f, a, isik);
-                Sekil.kutu(p, vc, -4.3f, -8.7f, -8f, 4.3f, -8f, -4.3f, b, isik);
-                Sekil.kutu(p, vc, -1.2f, -10f, -4.5f, 1.2f, -8.9f, -4.3f, b, isik);
-            }
-            case "cicek" -> {
-                Sekil.kutu(p, vc, -4.4f, -8.9f, -4.4f, 4.4f, -8f, 4.4f, a, isik);
-                int[] renkler = {b, 0xFFFFE066, 0xFFFFFFFF, 0xFF9B7BFF};
-                for (int i = 0; i < 8; i++) {
-                    double aci = i * Math.PI / 4;
-                    float x = (float) Math.cos(aci) * 4.2f, z = (float) Math.sin(aci) * 4.2f;
-                    Sekil.kutu(p, vc, x - 0.8f, -10.2f, z - 0.8f, x + 0.8f, -8.9f, z + 0.8f, renkler[i % 4], isik);
-                }
-            }
-            default -> { }
+    /**
+     * Kanadın her ekleminin, sırt düzlemine göre geriye doğru açısı (radyan, kökten uca birikimli).
+     * JS karşılığı: launcher/app/assets/js/hapi/kozmetik3b.js içindeki kanatAcilari.
+     */
+    public static float[] kanatAcilari(String hareket, float t, boolean egik, float yurume) {
+        float[] a = new float[EKLEM];
+        float hiz, acilma, genlik, bukum, bukumGenlik, gecikme;
+        switch (hareket) {
+            case "zar" -> { hiz = 0.13f; acilma = 0.62f; genlik = 0.34f; bukum = 0.05f; bukumGenlik = 0.075f; gecikme = 0.42f; }
+            case "kelebek" -> { hiz = 0.21f; acilma = 0.80f; genlik = 0.55f; bukum = 0.0f; bukumGenlik = 0.012f; gecikme = 0.2f; }
+            case "bocek" -> { hiz = 1.7f; acilma = 0.55f; genlik = 0.13f; bukum = 0.0f; bukumGenlik = 0.0f; gecikme = 0f; }
+            case "mekanik" -> { hiz = 0.11f; acilma = 0.58f; genlik = 0.32f; bukum = 0.03f; bukumGenlik = 0.06f; gecikme = 0.5f; }
+            case "kristal" -> { hiz = 0.06f; acilma = 0.50f; genlik = 0.14f; bukum = 0.02f; bukumGenlik = 0.03f; gecikme = 0.7f; }
+            default -> { hiz = 0.14f; acilma = 0.56f; genlik = 0.30f; bukum = 0.035f; bukumGenlik = 0.06f; gecikme = 0.38f; }
         }
+        hiz *= 1f + 0.8f * yurume;
+        if (egik) { acilma += 0.28f; genlik *= 0.45f; }
+        float faz = t * hiz;
+        float toplam = acilma + genlik * dalga(hareket, faz);
+        if (hareket.equals("bocek")) toplam += 0.1f * (float) Math.sin(t * 0.09f);
+        for (int i = 0; i < EKLEM; i++) {
+            if (i > 0) toplam += bukum + bukumGenlik * dalga(hareket, faz - gecikme - i * 0.3f);
+            a[i] = toplam;
+        }
+        return a;
     }
 
-    private static void haleCiz(PoseStack.Pose p, VertexConsumer vc, Kozmetik k, float zaman) {
-        boolean yorunge = k.bicim().equals("yorunge");
-        int parca = yorunge ? 5 : 12;
-        float yaricap = yorunge ? 6.5f : 4.2f;
-        for (int i = 0; i < parca; i++) {
-            double aci = i * 2 * Math.PI / parca;
-            float x = (float) Math.cos(aci) * yaricap, z = (float) Math.sin(aci) * yaricap;
-            int renk = k.bicim().equals("gokkusagi") ? Sekil.gokkusagi(i / (float) parca + zaman * 0.01f)
-                    : Sekil.karistir(k.renk1(), k.renk2(), (i % 3) / 2f);
-            float b = yorunge ? 0.6f : 0.95f;
-            float dy = yorunge ? (float) Math.sin(zaman * 0.15f + i) * 0.8f : 0;
-            Sekil.kutu(p, vc, x - b, -0.45f + dy, z - b, x + b, 0.45f + dy, z + b, renk, PARLAK);
-        }
+    /** Mekanik kanat dişli gibi kademeli hareket eder; diğerleri yumuşak salınır. */
+    private static float dalga(String hareket, float faz) {
+        float s = (float) Math.sin(faz);
+        return hareket.equals("mekanik") ? Math.round(s * 5f) / 5f : s;
     }
 
     /** Kanat menteşesi orijinde; yon=+1 oyuncunun soluna (model +x) uzanır. */
-    private static void kanatCiz(PoseStack.Pose p, VertexConsumer vc, Kozmetik k, int yon, int isik) {
-        int a = k.renk1(), b = k.renk2();
-        switch (k.bicim()) {
-            case "yarasa" -> {
-                Sekil.kutu(p, vc, 0, -1f, 0, yon * 11f, 0.2f, 0.7f, b, isik);
-                float[] uzun = {9f, 7.5f, 9.5f, 6.5f, 8f};
-                for (int i = 0; i < 5; i++) {
-                    float x0 = yon * (i * 2.2f), x1 = yon * (i * 2.2f + 2.2f);
-                    Sekil.kutu(p, vc, Math.min(x0, x1), 0.2f, 0.1f, Math.max(x0, x1), uzun[i], 0.5f,
-                            Sekil.karistir(a, b, i / 5f), isik);
-                }
-                Sekil.kutu(p, vc, yon * 10.2f - 0.5f, -3f, 0, yon * 10.2f + 0.5f, -1f, 0.7f, b, isik);
+    private static void kanatYaz(PoseStack.Pose p, VertexConsumer vc, Kozmetik k, int yon, float[] aci, int isik) {
+        float seg = k.en() / EKLEM / 16f;
+        float ust = -k.kok() * k.boy() / 16f, alt = (1f - k.kok()) * k.boy() / 16f;
+        float x = 0, z = 0;
+        for (int i = 0; i < EKLEM; i++) {
+            float c = (float) Math.cos(aci[i]), s = (float) Math.sin(aci[i]);
+            float x2 = x + yon * c * seg, z2 = z + s * seg;
+            float nx = -yon * s, nz = c;
+            float u0 = i / (float) EKLEM, u1 = (i + 1) / (float) EKLEM;
+            nokta(p, vc, x, ust, z, u0, 0, nx, nz, isik);
+            nokta(p, vc, x2, ust, z2, u1, 0, nx, nz, isik);
+            nokta(p, vc, x2, alt, z2, u1, 1, nx, nz, isik);
+            nokta(p, vc, x, alt, z, u0, 1, nx, nz, isik);
+            x = x2;
+            z = z2;
+        }
+    }
+
+    private static void disliYaz(PoseStack.Pose p, VertexConsumer vc, Kozmetik k, int yon, float[] aci, int isik, float zaman) {
+        float seg = k.en() / EKLEM / 16f;
+        float ust = -k.kok() * k.boy() / 16f;
+        for (float[] d : k.disliler()) {
+            int hedef = Math.min(EKLEM - 1, (int) (d[0] * EKLEM));
+            float x = 0, z = 0;
+            for (int i = 0; i < hedef; i++) {
+                x += yon * (float) Math.cos(aci[i]) * seg;
+                z += (float) Math.sin(aci[i]) * seg;
             }
-            case "kelebek" -> {
-                kanatParca(p, vc, yon, 0.5f, -7f, 9f, 0.5f, a, isik);
-                kanatParca(p, vc, yon, 2f, -5.5f, 7f, -1f, b, PARLAK);
-                kanatParca(p, vc, yon, 0.5f, 1f, 7f, 7f, Sekil.karistir(a, b, 0.5f), isik);
-                kanatParca(p, vc, yon, 1.8f, 2.3f, 5.2f, 5.5f, b, PARLAK);
-            }
-            default -> {
-                for (int i = 0; i < 6; i++) {
-                    float uzunluk = 13f - i * 1.7f;
-                    float ust = -5f + i * 2.4f;
-                    float x1 = yon * uzunluk;
-                    Sekil.kutu(p, vc, Math.min(0, x1), ust, 0.05f * i, Math.max(0, x1), ust + 2.6f, 0.6f + 0.05f * i,
-                            Sekil.karistir(a, b, i / 5f), isik);
-                }
-                float uc = yon * 13.5f;
-                Sekil.kutu(p, vc, Math.min(uc, uc - yon * 2f), -7f, 0, Math.max(uc, uc - yon * 2f), -5f, 0.6f, a, isik);
+            float c = (float) Math.cos(aci[hedef]), s = (float) Math.sin(aci[hedef]);
+            float kalan = d[0] * EKLEM - hedef;
+            float ax = yon * c, az = s, nx = -yon * s, nz = c;
+            float mx = x + ax * seg * kalan, mz = z + az * seg * kalan, my = ust + d[1] * k.boy() / 16f;
+            float r = d[2] / 16f;
+            double f = Math.toRadians(d[3] * zaman) * yon;
+            float co = (float) Math.cos(f) * r, si = (float) Math.sin(f) * r;
+            // Köşeler: merkez ± (co·A + si·B) ± (−si·A + co·B); A kanat yönü, B aşağı.
+            float[][] kose = {{-co + si, -si - co}, {co + si, si - co}, {co - si, si + co}, {-co - si, -si + co}};
+            float[][] uv = {{0, 0}, {1, 0}, {1, 1}, {0, 1}};
+            for (int yuz = -1; yuz <= 1; yuz += 2) {
+                float ox = nx * yuz * 0.35f / 16f, oz = nz * yuz * 0.35f / 16f;
+                for (int q = 0; q < 4; q++)
+                    nokta(p, vc, mx + ax * kose[q][0] + ox, my + kose[q][1], mz + az * kose[q][0] + oz,
+                            uv[q][0], uv[q][1], nx, nz, isik);
             }
         }
     }
 
-    private static void kanatParca(PoseStack.Pose p, VertexConsumer vc, int yon, float x0, float y0, float x1, float y1,
-                                   int renk, int isik) {
-        float ax = yon * x0, bx = yon * x1;
-        Sekil.kutu(p, vc, Math.min(ax, bx), y0, 0, Math.max(ax, bx), y1, 0.5f, renk, isik);
+    private static void nokta(PoseStack.Pose p, VertexConsumer vc, float x, float y, float z, float u, float v,
+                              float nx, float nz, int isik) {
+        vc.addVertex(p, x, y, z).setColor(0xFFFFFFFF).setUv(u, v).setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(isik).setNormal(p, nx, 0, nz);
     }
 }

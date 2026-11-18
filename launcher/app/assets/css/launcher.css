@@ -4087,3 +4087,262 @@ input:checked + .toggleSwitchSlider:before {
 #hapiAtif a {
     color: var(--hapi-yesil);
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * Kozmetik sayfası (kozmetik.ejs)                                             *
+ *                                                                             *
+ ******************************************************************************/
+
+#kozmetikButton {
+    /* Oyuncu sayısının altında durur; alt şeridin dar sol sütununu taşırmaz. */
+    position: absolute;
+    top: 32px;
+    left: 0;
+    white-space: nowrap;
+    line-height: normal;
+    background: rgba(43, 211, 90, 0.14);
+    border: 1px solid rgba(43, 211, 90, 0.65);
+    border-radius: 3px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+#kozmetikButton:hover,
+#kozmetikButton:focus {
+    background: #2bd35a;
+    color: #06200e;
+    outline: none;
+}
+
+#kozmetikContainer {
+    position: relative;
+    height: 100%;
+    display: flex;
+    gap: 14px;
+    padding: 34px 22px 20px 22px;
+    box-sizing: border-box;
+    background-color: rgba(4, 10, 7, 0.78);
+}
+
+#kozmetikSol {
+    width: 168px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+}
+#kozmetikBaslik {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 14px;
+}
+#kozmetikYuvalar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.kozmetikYuva {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    background: rgba(20, 26, 23, 0.85);
+    border: 1px solid #303a34;
+    border-left: 3px solid #303a34;
+    border-radius: 3px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 10px;
+    cursor: pointer;
+    text-align: left;
+    transition: 0.15s ease;
+}
+.kozmetikYuva:hover,
+.kozmetikYuva:focus {
+    background: rgba(32, 48, 40, 0.95);
+    outline: none;
+}
+.kozmetikYuva[secili] {
+    border-color: #2bd35a;
+    background: rgba(32, 48, 40, 0.95);
+}
+.kozmetikYuvaTakili {
+    font-size: 11px;
+    font-weight: 400;
+    color: #7c8a82;
+}
+.kozmetikYuvaTakili[dolu] {
+    color: #2bd35a;
+}
+#kozmetikSolAlt {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+#kozmetikSolAlt button,
+#kozmetikCevir {
+    background: rgba(20, 26, 23, 0.85);
+    border: 1px solid #303a34;
+    border-radius: 3px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 8px;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+#kozmetikSolAlt button:hover:enabled,
+#kozmetikCevir:hover {
+    border-color: #2bd35a;
+}
+#kozmetikSolAlt button:disabled {
+    color: #6b746f;
+    cursor: default;
+}
+#kozmetikBitti {
+    background: #2bd35a !important;
+    border-color: #2bd35a !important;
+    color: #06200e !important;
+    font-weight: 800;
+}
+#kozmetikBitti:hover {
+    background: #3be56c !important;
+}
+
+#kozmetikOrta {
+    flex: 1;
+    min-width: 0;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+#kozmetikOrta::-webkit-scrollbar {
+    width: 4px;
+}
+#kozmetikOrta::-webkit-scrollbar-thumb {
+    background: #2bd35a;
+}
+#kozmetikIzgara {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: 8px;
+}
+.kozmetikKart {
+    --nadirlik: #3a443e;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: rgba(20, 26, 23, 0.85);
+    border: 1px solid #303a34;
+    border-top: 3px solid var(--nadirlik);
+    border-radius: 3px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 12px;
+    padding: 10px 6px 8px 6px;
+    cursor: pointer;
+    transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+}
+.kozmetikKart:hover,
+.kozmetikKart:focus {
+    background: rgba(32, 48, 40, 0.95);
+    transform: translateY(-2px);
+    outline: none;
+}
+.kozmetikKart[secili] {
+    border-color: #2bd35a;
+    box-shadow: inset 0 0 0 1px #2bd35a;
+}
+.kozmetikKart[secili]::after {
+    content: '✔';
+    position: absolute;
+    top: 4px;
+    right: 7px;
+    color: #2bd35a;
+    font-size: 13px;
+}
+.kozmetikKart img,
+.kozmetikKartBos {
+    width: 72px;
+    height: 72px;
+    image-rendering: pixelated;
+}
+.kozmetikKartBos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    color: #56615a;
+}
+
+#kozmetikSag {
+    width: 34%;
+    min-width: 260px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+#kozmetikSahne {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    border: 1px solid #26402f;
+    border-radius: 3px;
+    background: radial-gradient(ellipse at 50% 85%, rgba(43, 211, 90, 0.20), rgba(6, 10, 8, 0.75) 65%);
+}
+#kozmetikTuval {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: grab;
+}
+#kozmetikTuval:active {
+    cursor: grabbing;
+}
+#kozmetikCevir {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 9px;
+    font-size: 12px;
+}
+#kozmetikIpucu {
+    position: absolute;
+    left: 8px;
+    bottom: 6px;
+    font-size: 11px;
+    color: #56615a;
+    pointer-events: none;
+}
+#kozmetikBilgi {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 62px;
+}
+#kozmetikBilgiAd {
+    font-size: 16px;
+    font-weight: 800;
+}
+#kozmetikBilgiNadirlik {
+    font-size: 11px;
+    color: #7c8a82;
+}
+#kozmetikBilgiAciklama {
+    font-size: 12px;
+    color: #b8c4bc;
+}
+#kozmetikNot {
+    font-size: 10px;
+    color: #56615a;
+}

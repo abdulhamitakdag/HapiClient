@@ -1,7 +1,6 @@
 package tr.com.hapicraft.client.ekran;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -28,8 +27,8 @@ public abstract class HapiEkran extends Screen {
         g.drawString(font, "§a§lHapi§f§lClient §8| §f" + title.getString(), 10, 9, 0xFFFFFFFF, true);
     }
 
-    protected Button dugme(String yazi, int x, int y, int w, Runnable is) {
-        return addRenderableWidget(Button.builder(Component.literal(yazi), b -> is.run()).bounds(x, y, w, 20).build());
+    protected HapiDugme dugme(String yazi, int x, int y, int w, Runnable is) {
+        return addRenderableWidget(new HapiDugme(x, y, w, 20, Component.literal(yazi), b -> is.run()));
     }
 
     @Override

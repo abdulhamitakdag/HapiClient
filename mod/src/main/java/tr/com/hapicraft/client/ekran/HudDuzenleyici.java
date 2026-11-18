@@ -21,11 +21,12 @@ public final class HudDuzenleyici extends Screen {
 
     @Override
     protected void init() {
-        addRenderableWidget(net.minecraft.client.gui.components.Button.builder(Component.literal("Konumları Sıfırla"), b -> {
+        addRenderableWidget(new HapiDugme(width / 2 - 122, height / 2 - 10, 120, 20, Component.literal("Konumları Sıfırla"), b -> {
             for (HudModul m : Hud.MODULLER) m.varsayilanKonum();
-        }).bounds(width / 2 - 122, height / 2 - 10, 120, 20).build());
-        addRenderableWidget(net.minecraft.client.gui.components.Button.builder(Component.literal("Bitti"), b -> onClose())
-                .bounds(width / 2 + 2, height / 2 - 10, 120, 20).build());
+        }));
+        HapiDugme bitti = new HapiDugme(width / 2 + 2, height / 2 - 10, 120, 20, Component.literal("Bitti"), b -> onClose());
+        bitti.vurgulu = true;
+        addRenderableWidget(bitti);
     }
 
     @Override
