@@ -28,6 +28,14 @@ public final class Ayarlar {
     public boolean tamParlaklik = false;
     public String profil = "";
     public boolean ilkAcilis = true;
+    /**
+     * "Otomatik" arayüz ölçeği: oyunun seçtiği en büyük ölçeğin bir kademe küçüğü; düğmeler dev görünmesin.
+     * Pencere boyutu değiştikçe yeniden hesaplanır (WindowMixin). Küçük ekranda daha da küçültülmez.
+     * @param otomatik pencereye sığan en büyük ölçek
+     */
+    public static int arayuzOlcegi(int otomatik) {
+        return otomatik >= 3 ? otomatik - 1 : otomatik;
+    }
 
     public static Path dizin() {
         return FabricLoader.getInstance().getGameDir().resolve("hapiclient");

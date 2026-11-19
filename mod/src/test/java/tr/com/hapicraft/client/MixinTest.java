@@ -21,6 +21,7 @@ class MixinTest {
             "net.minecraft.client.renderer.ScreenEffectRenderer",
             "net.minecraft.client.renderer.WeatherEffectRenderer",
             "net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl",
+            "com.mojang.blaze3d.platform.Window",
     };
 
     @Test

@@ -31,7 +31,7 @@ import tr.com.hapicraft.client.sohbet.SessizSohbet;
 
 public final class HapiClient implements ClientModInitializer {
     public static final String KIMLIK = "hapiclient";
-    public static final String SURUM = "0.4.1";
+    public static final String SURUM = "0.4.2";
     public static final String SUNUCU_ADRESI = "hapicraft.net";
     public static final Logger LOG = LoggerFactory.getLogger("HapiClient");
 

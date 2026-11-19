@@ -16,7 +16,8 @@
     "MinecraftMixin",
     "MouseHandlerMixin",
     "ScreenEffectRendererMixin",
-    "WeatherEffectRendererMixin"
+    "WeatherEffectRendererMixin",
+    "WindowMixin"
   ],
   "injectors": {
     "defaultRequire": 1

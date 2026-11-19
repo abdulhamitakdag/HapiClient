@@ -159,4 +159,12 @@ class MantikTest {
         assertNull(OtoGiris.komut("[VIP] biri: /giriş <şifre> yaz", null));
         assertNull(OtoGiris.komut("HapiCraft » Giriş başarılı, iyi oyunlar!", "gizli123"));
     }
+
+    @Test
+    void arayuzOlcegiBirKademeKuculur() {
+        assertEquals(3, Ayarlar.arayuzOlcegi(4)); // 1080p
+        assertEquals(2, Ayarlar.arayuzOlcegi(3));
+        assertEquals(2, Ayarlar.arayuzOlcegi(2)); // küçük ekran: daha da küçülmez
+        assertEquals(1, Ayarlar.arayuzOlcegi(1));
+    }
 }

@@ -259,13 +259,13 @@
           }
         },
         {
-          "id": "tr.com.hapicraft:hapiclient:0.4.1@jar",
+          "id": "tr.com.hapicraft:hapiclient:0.4.2@jar",
           "name": "HapiClient",
           "type": "FabricMod",
           "artifact": {
-            "size": 983503,
-            "MD5": "ced36e3a5d72caed0ef5681573040a6a",
-            "url": "https://client.hapicraft.com.tr/dagitim/mods/hapiclient-0.4.1%2Bmc1.21.11.jar"
+            "size": 984705,
+            "MD5": "20a4ec36a2c665cd65ca54dc923753d8",
+            "url": "https://client.hapicraft.com.tr/dagitim/mods/hapiclient-0.4.2%2Bmc1.21.11.jar"
           }
         }
       ]
