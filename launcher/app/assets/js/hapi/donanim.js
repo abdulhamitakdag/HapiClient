@@ -3,7 +3,7 @@
  * Electron'a bağımlı değildir; ham ölçümler ana süreçten (index.js) gelir.
  */
 
-exports.PROFILLER = ['patates', 'dusuk', 'dengeli', 'yuksek', 'ultra']
+exports.PROFILLER = ['ultrafps', 'fps', 'normal', 'kalite']
 
 /**
  * Java'ya ayrılacak RAM önerisi (MB).
@@ -99,41 +99,28 @@ exports.gpuSinifi = function(gpu){
 }
 
 /**
- * Performans profilini seçer. Saf fonksiyondur.
- * Ekran kartı sınıfı tabanı belirler; bellek ve çekirdek sayısı üst sınır koyar.
+ * Donanıma göre önerilen oyun modunu seçer. Saf fonksiyondur.
+ *
+ * Yüksek Kalite (gölgelendirici) yalnız her yönden güçlü sisteme önerilir: üst seviye ekran kartı,
+ * 16 GB bellek ve 6'dan fazla iş parçacığı. Yazılımsal ya da çok eski ekran kartı, 4 GB'tan az
+ * bellek, iki çekirdek veya tümleşik ekran kartı + 8 GB'tan az bellek Ultra FPS Boost'a gider.
  *
  * @param {{cekirdek: number, ramMB: number, gpu: string}} donanim
- * @returns {'patates'|'dusuk'|'dengeli'|'yuksek'|'ultra'}
+ * @returns {'ultrafps'|'fps'|'normal'|'kalite'}
  */
 exports.profilSec = function({ cekirdek, ramMB, gpu }){
-    let seviye = exports.gpuSinifi(gpu)
+    const ekran = exports.gpuSinifi(gpu)
 
-    let ramSiniri
-    if(ramMB < 3500){
-        ramSiniri = 0
-    } else if(ramMB < 7000){
-        ramSiniri = 1
-    } else if(ramMB < 11000){
-        ramSiniri = 2
-    } else if(ramMB < 15000){
-        ramSiniri = 3
-    } else {
-        ramSiniri = 4
+    if(ekran === 0 || ramMB < 3500 || cekirdek <= 2 || (ekran === 1 && ramMB < 7000)){
+        return 'ultrafps'
     }
-
-    let cekirdekSiniri
-    if(cekirdek <= 2){
-        cekirdekSiniri = 1
-    } else if(cekirdek <= 4){
-        cekirdekSiniri = 2
-    } else if(cekirdek <= 6){
-        cekirdekSiniri = 3
-    } else {
-        cekirdekSiniri = 4
+    if(ekran === 1 || ramMB < 7000 || cekirdek <= 4){
+        return 'fps'
     }
-
-    seviye = Math.min(seviye, ramSiniri, cekirdekSiniri)
-    return exports.PROFILLER[seviye]
+    if(ekran === 4 && ramMB >= 15000 && cekirdek > 6){
+        return 'kalite'
+    }
+    return 'normal'
 }
 
 /**

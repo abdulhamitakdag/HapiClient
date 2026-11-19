@@ -4145,6 +4145,79 @@ input:checked + .toggleSwitchSlider:before {
     text-shadow: 2px 2px 0 rgba(8, 24, 48, 0.85);
 }
 
+/* Oyun modu seçici */
+#landingContainer > #upper > #content {
+    flex-direction: column;
+}
+#hapiModSecici {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 26px 0 0 18px;
+    font-family: var(--hapi-piksel);
+    font-weight: 400;
+}
+#hapiModBaslik {
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: #fff;
+    text-shadow: 2px 2px 0 rgba(8, 24, 48, 0.85);
+}
+#hapiModListe {
+    display: flex;
+    gap: 8px;
+    margin-top: 7px;
+}
+.hapiModDugme {
+    position: relative;
+    padding: 8px 14px 9px 14px;
+    font-family: var(--hapi-piksel);
+    font-size: 21px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    color: #dfe8f4;
+    background: var(--hapi-panel);
+    border: 2px solid var(--hapi-cizgi);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.08s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.hapiModDugme:hover,
+.hapiModDugme:focus {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.55);
+    transform: translateY(-1px);
+    outline: none;
+}
+.hapiModDugme.secili {
+    color: #fff;
+    background: rgba(18, 74, 38, 0.92);
+    border-color: var(--hapi-yesil);
+    box-shadow: 0 3px 0 #062513;
+}
+.hapiModRozet {
+    position: absolute;
+    top: -11px;
+    right: -6px;
+    padding: 2px 6px 3px 6px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    color: #1d1300;
+    background: #ffcf3a;
+    border: 2px solid #5a3d00;
+    border-radius: 4px;
+}
+#hapiModNot {
+    margin-top: 8px;
+    padding: 5px 10px 6px 10px;
+    font-size: 17px;
+    letter-spacing: 0.3px;
+    color: #eaf1fb;
+    background: var(--hapi-panel-acik);
+    border-radius: 5px;
+}
+
 #image_seal {
     border: 3px solid #fff;
     box-shadow: 0 4px 0 rgba(8, 24, 48, 0.45);

@@ -42,12 +42,20 @@ class MantikTest {
 
     @Test
     void donanimPuaniSiralidir() {
-        assertEquals(Profil.PATATES, new Donanim("Intel(R) HD Graphics 4000", 2, 4000, 1024).onerilen());
-        assertEquals(Profil.ULTRA, new Donanim("NVIDIA GeForce RTX 4070/PCIe/SSE2", 16, 32000, 4096).onerilen());
-        Profil orta = new Donanim("NVIDIA GeForce GTX 1050 Ti/PCIe/SSE2", 4, 8000, 3072).onerilen();
-        assertTrue(orta == Profil.DUSUK || orta == Profil.DENGELI, orta.name());
-        assertTrue(new Donanim("llvmpipe (LLVM 15.0.7, 256 bits)", 16, 64000, 4096).puan() <= 1);
-        assertEquals(Profil.DENGELI, new Donanim("Bilinmiyor", 6, 0, 2048).onerilen());
+        assertEquals(Profil.ULTRA_FPS, new Donanim("Intel(R) HD Graphics 4000", 2, 4000, 1024).hesaplananOneri());
+        assertEquals(Profil.KALITE, new Donanim("NVIDIA GeForce RTX 4070/PCIe/SSE2", 16, 32000, 4096).hesaplananOneri());
+        Profil orta = new Donanim("NVIDIA GeForce GTX 1050 Ti/PCIe/SSE2", 4, 8000, 3072).hesaplananOneri();
+        assertTrue(orta == Profil.ULTRA_FPS || orta == Profil.FPS, orta.name());
+        assertEquals(Profil.ULTRA_FPS, new Donanim("llvmpipe (LLVM 15.0.7, 256 bits)", 16, 64000, 4096).hesaplananOneri());
+        assertEquals(Profil.FPS, new Donanim("Bilinmiyor", 6, 0, 2048).hesaplananOneri());
+        // Gölgelendiricili mod yalnız her yönden güçlü sisteme önerilir.
+        assertNotEquals(Profil.KALITE, new Donanim("NVIDIA GeForce RTX 4070/PCIe/SSE2", 4, 8000, 3072).hesaplananOneri());
+        assertNotEquals(Profil.KALITE, new Donanim("NVIDIA GeForce GTX 1660/PCIe/SSE2", 16, 32000, 4096).hesaplananOneri());
+        // Eski sürümlerin profil adları yeni modlara çevrilir.
+        assertEquals(Profil.ULTRA_FPS, Profil.bul("PATATES"));
+        assertEquals(Profil.KALITE, Profil.bul("ULTRA"));
+        assertEquals(Profil.FPS, Profil.bul("fps"));
+        assertNull(Profil.bul("yok"));
     }
 
     @Test

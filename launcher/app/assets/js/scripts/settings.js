@@ -1178,7 +1178,7 @@ function hapiDonanimGoster(){
         ram: (kayit.ramMB / 1024).toFixed(1),
         gpu: kayit.gpu || Lang.queryJS('settings.hardware.unknownGpu'),
         ekran: kayit.ekran || '?',
-        profil: Lang.queryJS(`settings.hardware.profiles.${kayit.profil}`),
+        profil: Lang.queryJS(`settings.hardware.profiles.${HapiProfil.cevir(kayit.profil) || 'normal'}`),
         javaRam: (kayit.javaRamMB / 1024).toFixed(1)
     })
 }

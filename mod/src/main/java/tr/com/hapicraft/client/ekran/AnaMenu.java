@@ -9,10 +9,12 @@ import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.Component;
 import tr.com.hapicraft.client.Ayarlar;
 import tr.com.hapicraft.client.HapiClient;
-import tr.com.hapicraft.client.performans.Donanim;
+import tr.com.hapicraft.client.performans.Profil;
 
 /** HapiClient ana menüsü: tek hedef HapiCraft. */
 public final class AnaMenu extends Screen {
+    private static boolean profilDenetlendi;
+
     public AnaMenu() {
         super(Component.literal("HapiClient"));
     }
@@ -25,10 +27,13 @@ public final class AnaMenu extends Screen {
 
     @Override
     protected void init() {
-        if (Ayarlar.A.ilkAcilis) {
-            Ayarlar.A.ilkAcilis = false;
-            try { Donanim.tara().onerilen().uygula(minecraft); } catch (Throwable t) { HapiClient.LOG.warn("İlk profil uygulanamadı", t); }
-            Ayarlar.kaydet();
+        if (!profilDenetlendi) {
+            profilDenetlendi = true;
+            try { Profil.baslangictaUygula(minecraft); } catch (Throwable t) { HapiClient.LOG.warn("Oyun modu uygulanamadı", t); }
+            if (Ayarlar.A.ilkAcilis) {
+                Ayarlar.A.ilkAcilis = false;
+                Ayarlar.kaydet();
+            }
         }
         int g = 220, x = (width - g) / 2, y = height / 2 - 10, yari = g / 2 - 2;
         dugme("§lOYNA", x, y, g, 28, () -> baglan(this)).vurgulu = true;

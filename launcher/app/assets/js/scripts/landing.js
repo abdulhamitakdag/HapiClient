@@ -26,6 +26,7 @@ const {
 // Internal Requirements
 const DiscordWrapper          = require('./assets/js/discordwrapper')
 const ProcessBuilder          = require('./assets/js/processbuilder')
+const HapiProfil              = require('./assets/js/hapi/profil')
 
 // Launch Elements
 const launch_content          = document.getElementById('launch_content')
@@ -373,6 +374,98 @@ const GAME_JOINED_REGEX = /\[.+\]: Sound engine started/
 const GAME_LAUNCH_REGEX = /^\[.+\]: (?:MinecraftForge .+ Initialized|ModLauncher .+ starting: .+|Loading Minecraft .+ with Fabric Loader .+)$/
 const MIN_LINGER = 5000
 
+/**
+ * Oyun modu seçici
+ */
+
+const hapiModListe = document.getElementById('hapiModListe')
+const hapiModNot   = document.getElementById('hapiModNot')
+
+/**
+ * @returns {string} Seçili sunucunun oyun dizini.
+ */
+function hapiOyunDizini(){
+    return require('path').join(ConfigManager.getInstanceDirectory(), ConfigManager.getSelectedServer())
+}
+
+/**
+ * @returns {string|null} Donanım taramasının önerdiği mod; tarama yoksa null.
+ */
+function hapiOnerilenMod(){
+    try {
+        const dosya = require('path').join(hapiOyunDizini(), 'hapiclient', 'donanim.json')
+        return HapiProfil.cevir(JSON.parse(require('fs').readFileSync(dosya, 'utf-8')).profil)
+    } catch(_err) {
+        return null
+    }
+}
+
+/**
+ * @returns {string} Oyuncunun seçtiği mod; seçmediyse önerilen, o da yoksa Normal.
+ */
+function hapiSeciliMod(){
+    return HapiProfil.oku(hapiOyunDizini()) || hapiOnerilenMod() || 'normal'
+}
+
+/**
+ * Mod düğmelerini çizer. Seçim tıklandığı anda profil.json'a yazılır; ayar dosyaları ve mod
+ * listesi oyun başlatılırken kurulur.
+ */
+function hapiModSeciciYenile(){
+    const onerilen = hapiOnerilenMod()
+    const secili = hapiSeciliMod()
+    hapiModListe.innerHTML = ''
+    for(const mod of HapiProfil.MODLAR){
+        const dugme = document.createElement('button')
+        dugme.className = 'hapiModDugme' + (mod.kimlik === secili ? ' secili' : '')
+        dugme.setAttribute('mod', mod.kimlik)
+        const ad = document.createElement('span')
+        ad.className = 'hapiModAd'
+        ad.textContent = mod.ad
+        dugme.appendChild(ad)
+        if(mod.kimlik === onerilen){
+            const rozet = document.createElement('span')
+            rozet.className = 'hapiModRozet'
+            rozet.textContent = 'Önerilen'
+            dugme.appendChild(rozet)
+        }
+        dugme.onclick = () => {
+            try {
+                HapiProfil.yaz(hapiOyunDizini(), mod.kimlik)
+            } catch(err) {
+                loggerLanding.error('Oyun modu kaydedilemedi.', err)
+            }
+            hapiModSeciciYenile()
+        }
+        hapiModListe.appendChild(dugme)
+    }
+    const bilgi = HapiProfil.MODLAR.find(m => m.kimlik === secili)
+    hapiModNot.textContent = bilgi.aciklama
+        + (secili === 'kalite' && onerilen != null && onerilen !== 'kalite' ? ' Bilgisayarın için ağır olabilir.' : '')
+}
+
+/**
+ * Seçili modu oyun dizinine uygular; isteğe bağlı modların (Iris, dinamik ışık) durumunu da ayarlar.
+ *
+ * @param {string} sunucuKimligi Dağıtımdaki sunucu kimliği.
+ */
+function hapiModUygula(sunucuKimligi){
+    const dizin = hapiOyunDizini()
+    const mod = hapiSeciliMod()
+    if(HapiProfil.oku(dizin) == null){
+        HapiProfil.yaz(dizin, mod)
+    }
+    const durum = HapiProfil.uygula(dizin, mod)
+    if(durum != null){
+        const ayar = ConfigManager.getModConfiguration(sunucuKimligi)
+        if(ayar != null){
+            Object.assign(ayar.mods, durum)
+            ConfigManager.setModConfiguration(sunucuKimligi, ayar)
+            ConfigManager.save()
+        }
+    }
+}
+
 async function dlAsync(login = true) {
 
     // Login parameter is temporary for debug purposes. Allows testing the validation/downloads without
@@ -482,6 +575,11 @@ async function dlAsync(login = true) {
     if(login) {
         const authUser = ConfigManager.getSelectedAccount()
         loggerLaunchSuite.info(`Sending selected account (${authUser.displayName}) to ProcessBuilder.`)
+        try {
+            hapiModUygula(serv.rawServer.id)
+        } catch(err) {
+            loggerLaunchSuite.error('Oyun modu uygulanamadı.', err)
+        }
         let pb = new ProcessBuilder(serv, versionData, modLoaderData, authUser, remote.app.getVersion())
         setLaunchDetails(Lang.queryJS('landing.dlAsync.launchingGame'))
 

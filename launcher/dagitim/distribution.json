@@ -259,13 +259,24 @@
           }
         },
         {
-          "id": "tr.com.hapicraft:hapiclient:0.4.2@jar",
+          "id": "modrinth:complementary-reimagined:r5.10@zip",
+          "name": "Complementary Shaders - Reimagined",
+          "type": "File",
+          "artifact": {
+            "size": 567387,
+            "MD5": "e2144455213b7755319282f7481696a3",
+            "url": "https://cdn.modrinth.com/data/HVnmMxH1/versions/RKfUB9VC/ComplementaryReimagined_r5.10.zip",
+            "path": "shaderpacks/ComplementaryReimagined_r5.10.zip"
+          }
+        },
+        {
+          "id": "tr.com.hapicraft:hapiclient:0.5.0@jar",
           "name": "HapiClient",
           "type": "FabricMod",
           "artifact": {
-            "size": 984705,
-            "MD5": "20a4ec36a2c665cd65ca54dc923753d8",
-            "url": "https://client.hapicraft.com.tr/dagitim/mods/hapiclient-0.4.2%2Bmc1.21.11.jar"
+            "size": 987794,
+            "MD5": "78166797153067a919b6bebf1dbf00a7",
+            "url": "https://client.hapicraft.com.tr/dagitim/mods/hapiclient-0.5.0%2Bmc1.21.11.jar"
           }
         }
       ]

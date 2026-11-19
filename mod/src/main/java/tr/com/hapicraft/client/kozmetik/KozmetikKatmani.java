@@ -30,6 +30,8 @@ public final class KozmetikKatmani extends RenderLayer<AvatarRenderState, Player
     @Override
     public void submit(PoseStack ps, SubmitNodeCollector toplayici, int isik, AvatarRenderState d, float yRot, float xRot) {
         if (d.isInvisible) return;
+        int mesafe = tr.com.hapicraft.client.performans.Profil.aktif().kozmetikMesafesi;
+        if (d.distanceToCameraSq > (double) mesafe * mesafe) return;
         Kozmetik sapka = Kozmetikler.takili(d.id, "sapka");
         Kozmetik hale = Kozmetikler.takili(d.id, "hale");
         Kozmetik kanat = Kozmetikler.takili(d.id, "kanat");

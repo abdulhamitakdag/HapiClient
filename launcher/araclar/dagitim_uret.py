@@ -64,6 +64,12 @@ MODLAR = [
     {'slug': 'krypton'},
 ]
 
+# Gölgelendirici paketleri (Modrinth). Oyun dizinindeki shaderpacks/ klasörüne iner; yalnız
+# "Yüksek Kalite" oyun modunda etkinleştirilir (launcher: app/assets/js/hapi/profil.js).
+# Complementary lisansı gereği dosya değiştirilmeden, doğrudan Modrinth adresinden indirilir;
+# kendi sunucumuza kopyalanmaz.
+GOLGELENDIRICILER = ['complementary-reimagined']
+
 # Java'ya ayrılacak bellek sınırları (MB). Asıl değer launcher'daki donanım taramasıyla seçilir.
 RAM_EN_AZ = 1024
 RAM_ONERILEN = 3072
@@ -220,6 +226,30 @@ def modrinth_modulleri() -> list:
     return moduller
 
 
+def golgelendirici_modulleri() -> list:
+    """GOLGELENDIRICILER için File modülleri (oyun dizinine göre shaderpacks/<dosya>)."""
+    moduller = []
+    for slug in GOLGELENDIRICILER:
+        proje = json_al(f'{MODRINTH}/project/{slug}')
+        surumler = [s for s in json_al(f'{MODRINTH}/project/{slug}/version')
+                    if MINECRAFT in s['game_versions'] and s['version_type'] == 'release']
+        if not surumler:
+            raise Hata(f'Modrinth: "{slug}" için {MINECRAFT} sürümü yok.')
+        surum = max(surumler, key=lambda s: s['date_published'])
+        dosya = next((d for d in surum['files'] if d['primary']), surum['files'][0])
+        veri = dogrulanmis_indir(dosya['url'], 'sha512', dosya['hashes']['sha512'])
+        modul_artifact = artifact(veri, dosya['url'])
+        modul_artifact['path'] = f"shaderpacks/{dosya['filename']}"
+        moduller.append({
+            'id': f"modrinth:{proje['slug']}:{maven_guvenli(surum['version_number'])}@zip",
+            'name': proje['title'],
+            'type': 'File',
+            'artifact': modul_artifact,
+        })
+        print(f'  {proje["slug"]:<22} {surum["version_number"]:<28} {len(veri):>9} bayt')
+    return moduller
+
+
 # ---------------------------------------------------------------------------------------------
 # Fabric loader
 # ---------------------------------------------------------------------------------------------
@@ -311,6 +341,8 @@ def uret(taban_url: str) -> None:
     moduller = [fabric_modulu(taban_url)]
     print('Modrinth modları:')
     moduller += modrinth_modulleri()
+    print('Gölgelendiriciler:')
+    moduller += golgelendirici_modulleri()
     print('Kendi modumuz:')
     moduller.append(hapiclient_modulu(taban_url))
 

@@ -102,7 +102,7 @@ async function showMainUI(data){
         
     }, 750)
     // İlk açılışta donanımı tara (RAM önerisi + performans profili).
-    hapiIlkDonanimTaramasi()
+    hapiIlkDonanimTaramasi().then(() => hapiModSeciciYenile())
     // Disable tabbing to the news container.
     initNews().then(() => {
         $('#newsContainer *').attr('tabindex', '-1')

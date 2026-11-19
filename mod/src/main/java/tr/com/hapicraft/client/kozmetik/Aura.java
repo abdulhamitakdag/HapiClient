@@ -30,8 +30,9 @@ public final class Aura {
 
     public static void tik(Minecraft mc) {
         if (mc.level == null || mc.player == null || mc.isPaused()) return;
+        int mesafe = tr.com.hapicraft.client.performans.Profil.aktif().auraMesafesi;
         for (AbstractClientPlayer o : mc.level.players()) {
-            if (o.isInvisible() || o.distanceToSqr(mc.player) > 48 * 48) continue;
+            if (o.isInvisible() || o.distanceToSqr(mc.player) > mesafe * mesafe) continue;
             Kozmetik k = Kozmetikler.takili(o.getUUID(), "aura");
             if (k == null) continue;
             if (o == mc.player && mc.options.getCameraType().isFirstPerson()) continue;

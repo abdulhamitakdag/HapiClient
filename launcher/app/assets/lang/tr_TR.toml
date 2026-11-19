@@ -65,7 +65,7 @@ tabJavaHeaderDesc = "Bellek, Java ve donanım taraması (gelişmiş)."
 hardwareTitle = "Donanım Taraması"
 hardwareNotScanned = "Sistem henüz taranmadı."
 hardwareScanButton = "Sistemi Tara"
-hardwareDesc = "Tarama; işlemciye, belleğe ve ekran kartına bakarak oyuna ayrılacak belleği ve performans profilini belirler. Sonuç oyundaki HapiClient ayarlarına aktarılır."
+hardwareDesc = "Tarama; işlemciye, belleğe ve ekran kartına bakarak oyuna ayrılacak belleği ve önerilen oyun modunu belirler. Oyun modunu ana ekrandan değiştirebilirsin."
 memoryTitle = "Bellek"
 maxRAM = "En Fazla RAM"
 minRAM = "En Az RAM"
@@ -229,17 +229,16 @@ off = "Kapalı (Varsayılan)"
 mainServer = "Ana Sunucu"
 
 [js.settings.hardware]
-summary = "<strong>İşlemci:</strong> {cpu} ({cekirdek} iş parçacığı)<br><strong>Bellek:</strong> {ram} GB<br><strong>Ekran kartı:</strong> {gpu}<br><strong>Ekran:</strong> {ekran}<br><strong>Performans profili:</strong> {profil}<br><strong>Oyuna ayrılan bellek:</strong> {javaRam} GB"
+summary = "<strong>İşlemci:</strong> {cpu} ({cekirdek} iş parçacığı)<br><strong>Bellek:</strong> {ram} GB<br><strong>Ekran kartı:</strong> {gpu}<br><strong>Ekran:</strong> {ekran}<br><strong>Önerilen oyun modu:</strong> {profil}<br><strong>Oyuna ayrılan bellek:</strong> {javaRam} GB"
 unknownGpu = "Bilinmiyor"
 scanning = "Taranıyor.."
 failed = "Tarama başarısız oldu. Ayrıntılar için konsola bak (CTRL + Shift + i)."
 
 [js.settings.hardware.profiles]
-patates = "Patates"
-dusuk = "Düşük"
-dengeli = "Dengeli"
-yuksek = "Yüksek"
-ultra = "Ultra"
+ultrafps = "Ultra FPS Boost"
+fps = "FPS Boost"
+normal = "Normal"
+kalite = "Yüksek Kalite"
 
 [js.settings.java]
 selectedJava = "Seçili: Java {version} ({vendor})"

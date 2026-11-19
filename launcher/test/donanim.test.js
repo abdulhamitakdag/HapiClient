@@ -62,27 +62,32 @@ test('ekran kartı sınıfı', () => {
     }
 })
 
-test('profil seçimi', () => {
+test('oyun modu önerisi', () => {
     // Eski dizüstü: 4 GB, 2 çekirdek, eski tümleşik.
-    assert.strictEqual(profilSec({ cekirdek: 2, ramMB: 3900, gpu: 'Intel(R) HD Graphics 4000' }), 'patates')
-    // Çok az bellek her şeyi patatese çeker.
-    assert.strictEqual(profilSec({ cekirdek: 8, ramMB: 3000, gpu: 'NVIDIA GeForce RTX 3060' }), 'patates')
+    assert.strictEqual(profilSec({ cekirdek: 2, ramMB: 3900, gpu: 'Intel(R) HD Graphics 4000' }), 'ultrafps')
+    // Çok az bellek her şeyi Ultra FPS Boost'a çeker.
+    assert.strictEqual(profilSec({ cekirdek: 8, ramMB: 3000, gpu: 'NVIDIA GeForce RTX 3060' }), 'ultrafps')
+    // Tümleşik kart, 4 GB.
+    assert.strictEqual(profilSec({ cekirdek: 4, ramMB: 3900, gpu: 'Intel(R) UHD Graphics 620' }), 'ultrafps')
+    // Güçlü kart ama 2 çekirdek.
+    assert.strictEqual(profilSec({ cekirdek: 2, ramMB: 16000, gpu: 'NVIDIA GeForce RTX 4080' }), 'ultrafps')
+    // Yazılımsal çizim.
+    assert.strictEqual(profilSec({ cekirdek: 16, ramMB: 64000, gpu: 'llvmpipe (LLVM 15.0.7, 256 bits)' }), 'ultrafps')
     // Tümleşik kart, 8 GB.
-    assert.strictEqual(profilSec({ cekirdek: 4, ramMB: 7900, gpu: 'Intel(R) UHD Graphics 620' }), 'dusuk')
-    // Giriş seviyesi harici kart.
-    assert.strictEqual(profilSec({ cekirdek: 4, ramMB: 7900, gpu: 'NVIDIA GeForce GTX 1050 Ti' }), 'dengeli')
-    // Orta kart ama 8 GB: dengeliyle sınırlı.
-    assert.strictEqual(profilSec({ cekirdek: 6, ramMB: 7900, gpu: 'NVIDIA GeForce RTX 3060' }), 'dengeli')
-    // Orta kart, 16 GB.
-    assert.strictEqual(profilSec({ cekirdek: 6, ramMB: 16000, gpu: 'NVIDIA GeForce RTX 3060' }), 'yuksek')
-    // Üst seviye kart, 32 GB, 16 çekirdek.
-    assert.strictEqual(profilSec({ cekirdek: 16, ramMB: 32000, gpu: 'NVIDIA GeForce RTX 4080' }), 'ultra')
-    // Üst seviye kart ama 6 çekirdek: yüksekle sınırlı.
-    assert.strictEqual(profilSec({ cekirdek: 6, ramMB: 32000, gpu: 'NVIDIA GeForce RTX 4080' }), 'yuksek')
-    // Güçlü kart ama 2 çekirdek: düşükle sınırlı.
-    assert.strictEqual(profilSec({ cekirdek: 2, ramMB: 16000, gpu: 'NVIDIA GeForce RTX 4080' }), 'dusuk')
+    assert.strictEqual(profilSec({ cekirdek: 4, ramMB: 7900, gpu: 'Intel(R) UHD Graphics 620' }), 'fps')
+    // Tümleşik kart, bellek ve işlemci güçlü olsa da FPS Boost.
+    assert.strictEqual(profilSec({ cekirdek: 16, ramMB: 32000, gpu: 'AMD Radeon(TM) Graphics' }), 'fps')
+    // Harici kart ama dört çekirdek.
+    assert.strictEqual(profilSec({ cekirdek: 4, ramMB: 7900, gpu: 'NVIDIA GeForce GTX 1050 Ti' }), 'fps')
     // Ekran kartı bilinmiyor: tümleşik varsayılır.
-    assert.strictEqual(profilSec({ cekirdek: 8, ramMB: 16000, gpu: '' }), 'dusuk')
+    assert.strictEqual(profilSec({ cekirdek: 8, ramMB: 16000, gpu: '' }), 'fps')
+    // Giriş seviyesi ve orta kartlar.
+    assert.strictEqual(profilSec({ cekirdek: 6, ramMB: 7900, gpu: 'NVIDIA GeForce GTX 1650' }), 'normal')
+    assert.strictEqual(profilSec({ cekirdek: 12, ramMB: 32000, gpu: 'NVIDIA GeForce RTX 3060' }), 'normal')
+    // Gölgelendirici yalnız her yönden güçlü sisteme: üst seviye kart, 16 GB, 6'dan fazla iş parçacığı.
+    assert.strictEqual(profilSec({ cekirdek: 16, ramMB: 32000, gpu: 'NVIDIA GeForce RTX 4080' }), 'kalite')
+    assert.strictEqual(profilSec({ cekirdek: 6, ramMB: 32000, gpu: 'NVIDIA GeForce RTX 4080' }), 'normal')
+    assert.strictEqual(profilSec({ cekirdek: 16, ramMB: 7900, gpu: 'NVIDIA GeForce RTX 4080' }), 'normal')
 })
 
 test('profil her girdide geçerli bir değer döndürür', () => {
@@ -125,7 +130,7 @@ test('donanim.json kaydı', () => {
         ramMB: 16000,
         gpu: 'NVIDIA GeForce RTX 3060',
         ekran: '1920x1080',
-        profil: 'yuksek',
+        profil: 'normal',
         javaRamMB: 4096,
         tarih: '2026-11-16T10:00:00.000Z'
     })
