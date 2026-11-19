@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """HapiClient kozmetik üreticisi.
 
-Tek kaynak: bu dizin. Çıktı hem moda hem launcher'a yazılır; ikisi aynı katalog, doku ve modelleri kullanır.
+Tek kaynak: bu dizin. Çıktı modun kaynaklarına yazılır.
   ham/kanat/*.png, ham/pelerin/*.png  ->  işlenmiş piksel dokuları (ham görseller ham/uret_ham.py ile üretilir)
   sapkalar.py                          ->  voksel modeller (şapka, hale)
 Kullanım: python3 uret.py            (hepsi)
@@ -21,7 +21,6 @@ import voksel
 
 KOK = pathlib.Path(__file__).resolve().parent
 MOD = KOK.parent / 'mod/src/main/resources/assets/hapiclient'
-LAUNCHER = KOK.parent / 'launcher/app/assets/kozmetik'
 CIKTI = KOK / 'cikti'
 
 KANAT_BOY = 128   # kanat dokusunun uzun kenarı (piksel)
@@ -432,8 +431,8 @@ def main():
 
     (CIKTI / 'katalog.json').write_text(json.dumps({'surum': 2, 'kozmetikler': katalog}, ensure_ascii=False, indent=1))
 
-    # Dağıtım: mod kaynakları ve launcher varlıkları.
-    hedefler = [(MOD / 'textures/kozmetik', MOD / 'kozmetik'), (LAUNCHER / 'doku', LAUNCHER)]
+    # Dağıtım: mod kaynakları.
+    hedefler = [(MOD / 'textures/kozmetik', MOD / 'kozmetik')]
     for doku_hedef, veri_hedef in hedefler:
         for d in (doku_hedef, veri_hedef / 'model'):
             if d.exists():

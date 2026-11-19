@@ -4090,259 +4090,249 @@ input:checked + .toggleSwitchSlider:before {
 
 /*******************************************************************************
  *                                                                             *
- * Kozmetik sayfası (kozmetik.ejs)                                             *
+ * HapiCraft teması: aydınlık Minecraft sahnesi üstünde koyu lacivert paneller *
+ * ve piksel yazı. Üstteki kuralları ezer; sahne araclar/sahne ile çizilir.    *
  *                                                                             *
  ******************************************************************************/
 
-#kozmetikButton {
-    /* Oyuncu sayısının altında durur; alt şeridin dar sol sütununu taşırmaz. */
-    position: absolute;
-    top: 32px;
-    left: 0;
-    white-space: nowrap;
-    line-height: normal;
-    background: rgba(43, 211, 90, 0.14);
-    border: 1px solid rgba(43, 211, 90, 0.65);
-    border-radius: 3px;
-    color: #fff;
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    padding: 5px 12px;
-    cursor: pointer;
-    transition: 0.2s ease;
+@font-face {
+    font-family: 'Jersey 15';
+    src: url('../fonts/jersey-15-latin-ext-400-normal.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+1E00-1EFF, U+2020, U+20A0-20C0;
 }
-#kozmetikButton:hover,
-#kozmetikButton:focus {
-    background: #2bd35a;
-    color: #06200e;
-    outline: none;
+@font-face {
+    font-family: 'Jersey 15';
+    src: url('../fonts/jersey-15-latin-400-normal.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+2000-206F, U+2190-2193, U+2212;
 }
 
-#kozmetikContainer {
-    position: relative;
-    height: 100%;
-    display: flex;
-    gap: 14px;
-    padding: 34px 22px 20px 22px;
-    box-sizing: border-box;
-    background-color: rgba(4, 10, 7, 0.78);
+:root {
+    --hapi-panel: rgba(13, 22, 36, 0.84);
+    --hapi-panel-acik: rgba(13, 22, 36, 0.62);
+    --hapi-cizgi: rgba(255, 255, 255, 0.16);
+    --hapi-yesil: #2bd35a;
+    --hapi-piksel: 'Jersey 15', 'Segoe UI', 'Noto Sans', Arial, sans-serif;
 }
 
-#kozmetikSol {
-    width: 168px;
-    flex-shrink: 0;
+#frameBar {
+    background-color: rgba(9, 15, 25, 0.9);
+}
+
+/* ---- Açılış ekranı ---- */
+
+#hapiHero {
     display: flex;
     flex-direction: column;
-}
-#kozmetikBaslik {
-    font-size: 22px;
-    font-weight: 800;
-    margin-bottom: 14px;
-}
-#kozmetikYuvalar {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-.kozmetikYuva {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
-    background: rgba(20, 26, 23, 0.85);
-    border: 1px solid #303a34;
-    border-left: 3px solid #303a34;
-    border-radius: 3px;
-    color: #fff;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 700;
-    padding: 8px 10px;
-    cursor: pointer;
-    text-align: left;
-    transition: 0.15s ease;
-}
-.kozmetikYuva:hover,
-.kozmetikYuva:focus {
-    background: rgba(32, 48, 40, 0.95);
-    outline: none;
-}
-.kozmetikYuva[secili] {
-    border-color: #2bd35a;
-    background: rgba(32, 48, 40, 0.95);
-}
-.kozmetikYuvaTakili {
-    font-size: 11px;
+    margin: 44px 0 0 18px;
+    font-family: var(--hapi-piksel);
     font-weight: 400;
-    color: #7c8a82;
-}
-.kozmetikYuvaTakili[dolu] {
-    color: #2bd35a;
-}
-#kozmetikSolAlt {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-#kozmetikSolAlt button,
-#kozmetikCevir {
-    background: rgba(20, 26, 23, 0.85);
-    border: 1px solid #303a34;
-    border-radius: 3px;
-    color: #fff;
-    font-family: inherit;
-    font-size: 13px;
-    padding: 8px;
-    cursor: pointer;
-    transition: 0.15s ease;
-}
-#kozmetikSolAlt button:hover:enabled,
-#kozmetikCevir:hover {
-    border-color: #2bd35a;
-}
-#kozmetikSolAlt button:disabled {
-    color: #6b746f;
-    cursor: default;
-}
-#kozmetikBitti {
-    background: #2bd35a !important;
-    border-color: #2bd35a !important;
-    color: #06200e !important;
-    font-weight: 800;
-}
-#kozmetikBitti:hover {
-    background: #3be56c !important;
-}
-
-#kozmetikOrta {
-    flex: 1;
-    min-width: 0;
-    overflow-y: auto;
-    padding-right: 4px;
-}
-#kozmetikOrta::-webkit-scrollbar {
-    width: 4px;
-}
-#kozmetikOrta::-webkit-scrollbar-thumb {
-    background: #2bd35a;
-}
-#kozmetikIzgara {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
-    gap: 8px;
-}
-.kozmetikKart {
-    --nadirlik: #3a443e;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    background: rgba(20, 26, 23, 0.85);
-    border: 1px solid #303a34;
-    border-top: 3px solid var(--nadirlik);
-    border-radius: 3px;
-    color: #fff;
-    font-family: inherit;
-    font-size: 12px;
-    padding: 10px 6px 8px 6px;
-    cursor: pointer;
-    transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
-}
-.kozmetikKart:hover,
-.kozmetikKart:focus {
-    background: rgba(32, 48, 40, 0.95);
-    transform: translateY(-2px);
-    outline: none;
-}
-.kozmetikKart[secili] {
-    border-color: #2bd35a;
-    box-shadow: inset 0 0 0 1px #2bd35a;
-}
-.kozmetikKart[secili]::after {
-    content: '✔';
-    position: absolute;
-    top: 4px;
-    right: 7px;
-    color: #2bd35a;
-    font-size: 13px;
-}
-.kozmetikKart img,
-.kozmetikKartBos {
-    width: 72px;
-    height: 72px;
-    image-rendering: pixelated;
-}
-.kozmetikKartBos {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 34px;
-    color: #56615a;
-}
-
-#kozmetikSag {
-    width: 34%;
-    min-width: 260px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-#kozmetikSahne {
-    position: relative;
-    flex: 1;
-    min-height: 0;
-    border: 1px solid #26402f;
-    border-radius: 3px;
-    background: radial-gradient(ellipse at 50% 85%, rgba(43, 211, 90, 0.20), rgba(6, 10, 8, 0.75) 65%);
-}
-#kozmetikTuval {
-    width: 100%;
-    height: 100%;
-    display: block;
-    cursor: grab;
-}
-#kozmetikTuval:active {
-    cursor: grabbing;
-}
-#kozmetikCevir {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    padding: 4px 9px;
-    font-size: 12px;
-}
-#kozmetikIpucu {
-    position: absolute;
-    left: 8px;
-    bottom: 6px;
-    font-size: 11px;
-    color: #56615a;
+    line-height: 1;
     pointer-events: none;
 }
-#kozmetikBilgi {
-    display: flex;
+#hapiHeroBaslik {
+    font-size: 76px;
+    color: #fff;
+    text-shadow: 4px 4px 0 rgba(8, 24, 48, 0.8);
+}
+.hapiYesil {
+    color: #3fe870;
+    text-shadow: 4px 4px 0 #0b4a1f;
+}
+#hapiHeroSlogan {
+    margin-top: 2px;
+    font-size: 28px;
+    color: #fff;
+    text-shadow: 2px 2px 0 rgba(8, 24, 48, 0.85);
+}
+
+#image_seal {
+    border: 3px solid #fff;
+    box-shadow: 0 4px 0 rgba(8, 24, 48, 0.45);
+}
+#image_seal_container {
+    margin-top: 42px;
+}
+
+#rightContainer {
+    top: 42px;
+    height: calc(100% - 42px);
+}
+#avatarContainer {
+    border: 3px solid #fff;
+    background-color: var(--hapi-panel);
+    box-shadow: 0 4px 0 rgba(8, 24, 48, 0.45);
+}
+#user_text {
+    font-family: var(--hapi-piksel);
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-shadow: none;
+    right: 84px;
+    min-width: 0;
+    white-space: nowrap;
+    padding: 7px 12px;
+    background: var(--hapi-panel);
+    border: 2px solid var(--hapi-cizgi);
+    border-radius: 6px;
+}
+#mediaContent {
+    height: auto;
+    width: 38px;
+    margin: 16px 0 0 16px;
+    padding: 8px 0;
+    background: var(--hapi-panel-acik);
+    border: 2px solid var(--hapi-cizgi);
+    border-radius: 8px;
+}
+
+#landingContainer > #lower {
+    position: relative;
+    align-items: center;
+    background: linear-gradient(to top, rgba(9, 15, 25, 0.9) 0%, rgba(9, 15, 25, 0.62) 55%, rgba(9, 15, 25, 0) 100%);
+}
+#landingContainer > #lower > #left {
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 40px;
+    box-sizing: border-box;
+}
+#landingContainer > #lower > #left #content {
+    top: 8px;
+    left: 0;
+}
+#server_status_wrapper {
+    width: auto;
+    align-items: center;
+    padding: 7px 14px;
+    background: var(--hapi-panel);
+    border: 2px solid var(--hapi-cizgi);
+    border-radius: 6px;
+}
+#server_status_wrapper::before {
+    content: '';
+    width: 9px;
+    height: 9px;
+    margin-right: 9px;
+    background: var(--hapi-yesil);
+    box-shadow: 0 0 8px var(--hapi-yesil);
+}
+#landingPlayerLabel,
+#player_count {
+    font-family: var(--hapi-piksel);
+    font-size: 19px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-shadow: none;
+}
+#player_count {
+    color: #6dfb97;
+}
+
+#landingContainer > #lower > #right {
+    position: absolute;
+    left: 50%;
+    width: auto;
+    transform: translateX(-50%);
+    align-items: center;
+}
+#landingContainer > #lower > #right #launch_content {
+    top: 4px;
     flex-direction: column;
-    gap: 2px;
-    min-height: 62px;
+    align-items: center;
 }
-#kozmetikBilgiAd {
+#launch_content .bot_divider {
+    display: none;
+}
+#launch_button {
+    font-family: var(--hapi-piksel);
+    font-size: 44px;
+    font-weight: 400;
+    line-height: 40px;
+    letter-spacing: 5px;
+    color: #fff;
+    text-shadow: 3px 3px 0 #0c4a20;
+    padding: 9px 74px 12px 78px;
+    border: 3px solid #08301a;
+    border-radius: 5px;
+    background: linear-gradient(to bottom, #5cf08a 0%, #2fd75f 48%, #1fb34b 100%);
+    box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.5), inset 0 -6px 0 rgba(0, 0, 0, 0.22), 0 6px 0 #062513, 0 12px 22px rgba(0, 0, 0, 0.5);
+    transition: transform 0.08s ease, filter 0.15s ease, box-shadow 0.08s ease;
+}
+#launch_button:hover,
+#launch_button:focus {
+    text-shadow: 3px 3px 0 #0c4a20;
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+#launch_button:active {
+    color: #fff;
+    text-shadow: 3px 3px 0 #0c4a20;
+    transform: translateY(4px);
+    box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.5), inset 0 -6px 0 rgba(0, 0, 0, 0.22), 0 2px 0 #062513, 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+#launch_button:disabled {
+    color: #dfe7e2;
+    filter: grayscale(0.85) brightness(0.8);
+}
+#server_selection_button {
+    margin-top: 11px;
+    font-family: var(--hapi-piksel);
     font-size: 16px;
-    font-weight: 800;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    line-height: 14px;
+    opacity: 0.9;
 }
-#kozmetikBilgiNadirlik {
-    font-size: 11px;
-    color: #7c8a82;
+
+#launch_details {
+    top: 4px;
+    align-items: center;
+    padding: 12px 18px;
+    background: var(--hapi-panel);
+    border: 2px solid var(--hapi-cizgi);
+    border-radius: 6px;
 }
-#kozmetikBilgiAciklama {
-    font-size: 12px;
-    color: #b8c4bc;
+#launch_progress_label {
+    font-family: var(--hapi-piksel);
+    font-weight: 400;
+    font-size: 26px;
+    color: #6dfb97;
 }
-#kozmetikNot {
-    font-size: 10px;
-    color: #56615a;
+#launch_progress[value] {
+    height: 10px;
+    width: 300px;
+    margin-bottom: 5px;
+    border: 2px solid #08301a;
+}
+#launch_progress[value]::-webkit-progress-bar {
+    background-color: rgba(255, 255, 255, 0.14);
+}
+#launch_progress[value]::-webkit-progress-value {
+    background: linear-gradient(to bottom, #5cf08a, #1fb34b);
+}
+
+/* ---- Giriş ve karşılama: sahne görünür kalsın, içerik kartta dursun ---- */
+
+#loginContainer,
+#welcomeContainer {
+    background: rgba(9, 15, 25, 0.28);
+}
+#loginContent,
+#welcomeContent {
+    height: auto;
+    top: 0;
+    padding: 24px 40px 20px 40px;
+    max-width: 560px;
+    box-sizing: border-box;
+    background: var(--hapi-panel);
+    border: 2px solid var(--hapi-cizgi);
+    border-radius: 12px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* ---- Ayarlar: çok yazı var, zemin koyu kalır ---- */
+
+#settingsContainer {
+    background-color: rgba(11, 18, 30, 0.9);
 }

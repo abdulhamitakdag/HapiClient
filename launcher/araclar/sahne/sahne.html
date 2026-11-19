@@ -1,0 +1,9 @@
+<!doctype html>
+<meta charset="utf-8">
+<body style="margin:0">
+<script>
+const { ipcRenderer } = require('electron')
+window.onerror = (m, k, s) => ipcRenderer.send('hata', m + ' @' + k + ':' + s)
+window.addEventListener('unhandledrejection', e => ipcRenderer.send('hata', String(e.reason && e.reason.stack || e.reason)))
+require('./sahne.js').ciz(new URLSearchParams(location.search)).then(veri => ipcRenderer.send('bitti', veri))
+</script>

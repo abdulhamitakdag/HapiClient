@@ -9,14 +9,13 @@
         body {
             /*background: url('assets/images/backgrounds/<%=bkid%>.jpg') no-repeat center center fixed;*/
             transition: background-image 1s ease;
-            background-color: #0b1410;
+            background-color: #5aa5f5;
             background-size: cover;
             -webkit-user-select: none;
         }
         #main {
             display: none;
             height: calc(100% - 22px);
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%);
             width: 100%;
             position: absolute;
             z-index: 10;
@@ -32,7 +31,6 @@
         <%- include('welcome') %>
         <%- include('login') %>
         <%- include('settings') %>
-        <%- include('kozmetik') %>
         <%- include('landing') %>
     </div>
     <%- include('overlay') %>

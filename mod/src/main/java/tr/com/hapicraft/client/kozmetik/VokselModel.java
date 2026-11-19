@@ -123,7 +123,7 @@ public final class VokselModel {
 
         public int dortgenSayisi() { return renk.length; }
 
-        /** Parçanın canlandırma dönüşümünü yığına uygular. JS karşılığı: launcher/.../kozmetik3b.js */
+        /** Parçanın canlandırma dönüşümünü yığına uygular. */
         void donustur(PoseStack ps, float t) {
             if (don == null && sallan == null && sek == null && yorunge == null) return;
             ps.translate(ex, ey, ez);

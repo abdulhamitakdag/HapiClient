@@ -74,7 +74,6 @@ public final class KozmetikKatmani extends RenderLayer<AvatarRenderState, Player
 
     /**
      * Kanadın her ekleminin, sırt düzlemine göre geriye doğru açısı (radyan, kökten uca birikimli).
-     * JS karşılığı: launcher/app/assets/js/hapi/kozmetik3b.js içindeki kanatAcilari.
      */
     public static float[] kanatAcilari(String hareket, float t, boolean egik, float yurume) {
         float[] a = new float[EKLEM];

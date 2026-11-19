@@ -1,93 +1,18 @@
 /**
- * Kozmetiklerin launcher tarafı: katalog, oyun dizinindeki seçim dosyası ve modla ortak hesaplar.
- *
- * Katalog, doku ve modeller `app/assets/kozmetik/` altındadır; `kozmetik/uret.py` aynı dosyaları moda da
- * yazar. Seçim, modun okuduğu `<oyun dizini>/hapiclient/ayarlar.json` dosyasının `kozmetik` alanıdır.
+ * Sahne çizimi için kozmetik verisi: modun kaynaklarındaki katalog ve voksel modelleri okur.
+ * Hareket ve model hesapları moddaki KozmetikKatmani / VokselModel ile aynıdır.
  */
-const fs   = require('fs-extra')
+const fs   = require('fs')
 const path = require('path')
 const zlib = require('zlib')
 
-const VARLIK_DIZINI = path.join(__dirname, '..', '..', 'kozmetik')
-
-exports.VARLIK_DIZINI = VARLIK_DIZINI
-exports.YUVALAR = ['pelerin', 'kanat', 'sapka', 'hale', 'aura']
-exports.YUVA_ADLARI = { pelerin: 'Pelerin', kanat: 'Kanat', sapka: 'Şapka', hale: 'Hale', aura: 'Aura' }
-exports.NADIRLIK = {
-    yaygin: { ad: 'Yaygın', renk: '#b8c4bc' },
-    nadir: { ad: 'Nadir', renk: '#4fc3ff' },
-    destansi: { ad: 'Destansı', renk: '#b98cff' },
-    efsanevi: { ad: 'Efsanevi', renk: '#ffc53d' }
-}
-/** Kanadın kökten uca bölündüğü eklem sayısı (moddaki KozmetikKatmani.EKLEM). */
+const MOD = path.join(__dirname, '..', '..', '..', 'mod', 'src', 'main', 'resources', 'assets', 'hapiclient')
+exports.DOKU_DIZINI = path.join(MOD, 'textures', 'kozmetik')
+const MODEL_DIZINI = path.join(MOD, 'kozmetik', 'model')
 exports.EKLEM = 8
 
-let katalogOnbellek = null
-
-/** @returns {Array<object>} Katalogdaki bütün kozmetikler. */
-exports.katalog = function(){
-    if(katalogOnbellek == null){
-        katalogOnbellek = JSON.parse(fs.readFileSync(path.join(VARLIK_DIZINI, 'katalog.json'), 'utf8')).kozmetikler
-    }
-    return katalogOnbellek
-}
-
-exports.bul = function(kimlik){
-    return exports.katalog().find(k => k.kimlik === kimlik) || null
-}
-
-function ayarDosyasi(oyunDizini){
-    return path.join(oyunDizini, 'hapiclient', 'ayarlar.json')
-}
-
-function ayarlariOku(oyunDizini){
-    try {
-        const veri = JSON.parse(fs.readFileSync(ayarDosyasi(oyunDizini), 'utf8'))
-        return veri != null && typeof veri === 'object' && !Array.isArray(veri) ? veri : {}
-    } catch(_err){
-        return {}
-    }
-}
-
-/**
- * @param {string} oyunDizini Sunucunun oyun (instance) dizini.
- * @returns {Object<string,string>} yuva → kozmetik kimliği; yalnız katalogda olan ve yuvası tutan seçimler.
- */
-exports.secimiOku = function(oyunDizini){
-    const ham = ayarlariOku(oyunDizini).kozmetik
-    const secim = {}
-    if(ham != null && typeof ham === 'object'){
-        for(const yuva of exports.YUVALAR){
-            const k = exports.bul(ham[yuva])
-            if(k != null && k.yuva === yuva){
-                secim[yuva] = k.kimlik
-            }
-        }
-    }
-    return secim
-}
-
-/**
- * Seçimi oyunun ayar dosyasına yazar; dosyadaki diğer ayarlara dokunmaz.
- *
- * @param {string} oyunDizini Sunucunun oyun (instance) dizini.
- * @param {Object<string,string>} secim yuva → kozmetik kimliği (boş ya da eksik yuva = takılı değil).
- */
-exports.secimiYaz = function(oyunDizini, secim){
-    const ayarlar = ayarlariOku(oyunDizini)
-    const temiz = {}
-    for(const yuva of exports.YUVALAR){
-        const k = exports.bul(secim[yuva])
-        if(k != null && k.yuva === yuva){
-            temiz[yuva] = k.kimlik
-        }
-    }
-    ayarlar.kozmetik = temiz
-    const dosya = ayarDosyasi(oyunDizini)
-    fs.ensureDirSync(path.dirname(dosya))
-    fs.writeFileSync(dosya + '.tmp', JSON.stringify(ayarlar, null, 2), 'utf8')
-    fs.moveSync(dosya + '.tmp', dosya, { overwrite: true })
-}
+const katalog = JSON.parse(fs.readFileSync(path.join(MOD, 'kozmetik', 'katalog.json'), 'utf8')).kozmetikler
+exports.bul = kimlik => katalog.find(k => k.kimlik === kimlik) || null
 
 /**
  * Kanadın her ekleminin sırt düzlemine göre geriye açısı (radyan, kökten uca birikimli).
@@ -135,7 +60,7 @@ const YONLER = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, 
  * @returns {Array<{ad:string, isik:boolean, eksen:number[], anim:object, dortgenler:Array<{k:number[], renk:number, n:number[]}>}>}
  */
 exports.modelYukle = function(ad){
-    const ham = JSON.parse(fs.readFileSync(path.join(VARLIK_DIZINI, 'model', ad + '.json'), 'utf8'))
+    const ham = JSON.parse(fs.readFileSync(path.join(MODEL_DIZINI, ad + '.json'), 'utf8'))
     return ham.parcalar.map(h => {
         const [nx, ny, nz] = h.boyut
         const v = zlib.inflateSync(Buffer.from(h.veri, 'base64'))

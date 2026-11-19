@@ -81,9 +81,9 @@ class KozmetikTest {
         }
     }
 
-    /** Launcher önizlemesi aynı hesabı JS'te yapar; iki taraf aynı sayıları sınar (launcher/test/kozmetik_parite.json). */
+    /** Bilinen değerler: hareket hesabı fark edilmeden değişmesin. */
     @Test
-    void kanatAcilariLauncherIleAyni() {
+    void kanatAcilariSabit() {
         float[] tuy = {0.741f, 0.774f, 0.789f, 0.789f, 0.775f, 0.754f, 0.729f, 0.706f};
         float[] mekanik = {0.946f, 0.964f, 0.97f, 0.964f, 0.946f, 0.916f, 0.886f, 0.856f};
         assertArrayEquals(tuy, KozmetikKatmani.kanatAcilari("tuy", 37.5f, false, 0.4f), 0.002f);
